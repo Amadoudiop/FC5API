@@ -33,3 +33,6 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+    token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager', '@router']

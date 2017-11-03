@@ -18,4 +18,16 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
+
+    /**
+     * @Route("/login", name="login")
+     */
+    public function loginAction()
+    {
+        $error = $this->get('security.authentication_utils')
+            ->getLastAuthenticationError();
+        return $this->render('default/login.html.twig', [
+            'error' => $error
+        ]);
+    }
 }

@@ -50,9 +50,9 @@ class Contrat
     private $date_start;
 
     /**
-     * @var interger
+     * @var integer
      *
-     * @ORM\Column(name="duration", type="interger", length=2)
+     * @ORM\Column(name="duration", type="integer", length=2)
      */
     private $duration;
 
@@ -173,11 +173,11 @@ class Contrat
     /**
      * Set duration
      *
-     * @param \interger $duration
+     * @param \integer $duration
      *
      * @return Contrat
      */
-    public function setDuration(\interger $duration)
+    public function setDuration(\integer $duration)
     {
         $this->duration = $duration;
 
@@ -187,7 +187,7 @@ class Contrat
     /**
      * Get duration
      *
-     * @return \interger
+     * @return \integer
      */
     public function getDuration()
     {
