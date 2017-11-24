@@ -21,11 +21,16 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", unique=true)
      */
-    private $username;
+    private $email;
 
     public function getUsername()
     {
-        return $this->username;
+        return $this->email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getRoles()
@@ -43,5 +48,8 @@ class User implements UserInterface
     {
     }
 
-    // more getters/setters
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
 }

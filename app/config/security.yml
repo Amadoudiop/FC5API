@@ -13,9 +13,11 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
+        secured_area:
             anonymous: ~
-            logout: ~
+            logout:
+                path:   /logout
+                target: /
 
             guard:
                 authenticators:

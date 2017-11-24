@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -20,14 +21,40 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/login", name="login")
-     */
-    public function loginAction()
+    * @Route("/login", name="login")
+    */
+    public function loginAction(Request $request)
     {
+        //var_dump($request);die;
+        /*$user = $this->getUser();
+
+        if ($user instanceof UserInterface) {
+            return $this->redirectToRoute('homepage');
+        }*/
+
+        /** @var AuthenticationException $exception */
+        //$exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
+
+        //return $this->render('default/login.html.twig', [
+          //'error' => $exception ? $exception->getMessage() : NULL,
+        //]);
+
         $error = $this->get('security.authentication_utils')
             ->getLastAuthenticationError();
-        return $this->render('default/login.html.twig', [
-            'error' => $error
-        ]);
+
+        return new JsonResponse($error);
+    }
+
+    /**
+     * @Route("/profil", name="my_profil")
+     */
+    public function profilAction(Request $request)
+    {
+
+        //infos de l'utlisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        return new JsonResponse($user);
+
     }
 }
