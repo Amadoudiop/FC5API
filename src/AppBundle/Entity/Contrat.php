@@ -177,7 +177,7 @@ class Contrat
      *
      * @return Contrat
      */
-    public function setDuration(\integer $duration)
+    public function setDuration($duration)
     {
         $this->duration = $duration;
 

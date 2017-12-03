@@ -37,6 +37,17 @@ class PlayerPosition
 
 
     /**
+     * Many Positions have Many Players.
+     * @ORM\ManyToMany(targetEntity="Player", mappedBy="positions")
+     */
+    private $players;
+
+    public function __construct()
+    {
+        $this->players = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return int

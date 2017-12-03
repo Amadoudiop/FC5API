@@ -49,6 +49,19 @@ class Player
      */
     private $realClub;
 
+    /**
+     * Many Players have Many PlayerPostions.
+     * @ORM\ManyToMany(targetEntity="PlayerPosition", inversedBy="players")
+     * @ORM\JoinTable(name="players_postions")
+     */
+    private $positions;
+
+
+    public function __construct()
+    {
+        $this->positions = new ArrayCollection();
+    }
+
 
     /**
      * Get id
