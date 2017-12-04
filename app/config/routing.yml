@@ -6,3 +6,7 @@ admin:
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+auth-tokens:
+    type:     rest
+    resource: AppBundle\Controller\AuthTokenController

@@ -19,6 +19,7 @@ security:
                 path:   /logout
                 target: /
 
-            guard:
-                authenticators:
-                    - token_authenticator
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 12
