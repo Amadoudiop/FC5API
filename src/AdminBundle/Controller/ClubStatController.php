@@ -198,7 +198,7 @@ class ClubStatController extends JsonController
      * )
      *
      * @Route("/{id}/remove", name="clubStatRemove")
-     * @Method("POST")
+     * @Method("DELETE")
      *
      */
     public function removeAction(Request $request)

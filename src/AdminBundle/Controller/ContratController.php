@@ -107,79 +107,121 @@ class ContratController extends JsonController
     }
 
     /**
-     * Finds and displays a contrat entity.
      *
-     * @Route("/{id}", name="contrat_show")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get a contract",
+     *     section="Contract"
+     * )
+     *
+     * @Route("/{id}", name="getContract")
      * @Method("GET")
-     */
-    public function showAction(Contrat $contrat)
-    {
-        $deleteForm = $this->createDeleteForm($contrat);
-
-        return $this->render('contrat/show.html.twig', array(
-            'contrat' => $contrat,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing contrat entity.
      *
-     * @Route("/{id}/edit", name="contrat_edit")
-     * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Contrat $contrat)
+    public function getAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($contrat);
-        $editForm = $this->createForm('AppBundle\Form\ContratType', $contrat);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('contrat_edit', array('id' => $contrat->getId()));
+        $repository = $this->getDoctrine()->getRepository('AppBundle:ClubStat');
+        $contract = $repository->findOneById($request->get('id'));
+        if (empty($contract)) {
+            return new ApiResponse(null, 404, ['Club not found']);
+        } else {
+            return new ApiResponse(
+                $contract->serializeEntity()
+            );
         }
-
-        return $this->render('contrat/edit.html.twig', array(
-            'contrat' => $contrat,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
-    /**
-     * Deletes a contrat entity.
-     *
-     * @Route("/{id}", name="contrat_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Contrat $contrat)
-    {
-        $form = $this->createDeleteForm($contrat);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($contrat);
+    /**
+     * Edit a Contract
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Edit a contract",
+     *     section="Contract",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="id", "dataType"="string", "required"=true, "description"="Contract id"},
+     *     }
+     * )
+     *
+     * @Route("/{id}/edit", name="contractEdit")
+     * @Method("POST")
+     *
+     */
+    public function editAction(Request $request)
+    {
+        $json       = $this->getJson($request)->toArray();
+        $em         = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Contrat');
+        $contract = $repository->findOneById($request->get('id'));
+        if (empty($contract)) {
+            return new ApiResponse(null, 404);
+        }
+        $editForm = $this->createForm(ClubFormType::class, $contract);
+        $editForm->submit($json);
+        if ($editForm->isValid()) {
+            $em->persist($contract);
             $em->flush();
+            return new ApiResponse(
+                $contract->serializeEntity()
+            );
+        } else {
+            return new ApiResponse(null, 422, $this->getErrorMessages($editForm));
         }
-
-        return $this->redirectToRoute('contrat_index');
     }
 
+
     /**
-     * Creates a form to delete a contrat entity.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @param Contrat $contrat The contrat entity
+     * @return \AdminBundle\Helper\Response\ApiResponse
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @ApiDoc(
+     *     description="Delete existing Contract",
+     *     section="Contract",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     }
+     * )
+     *
+     * @Route("/{id}/remove", name="contractRemove")
+     * @Method("DELETE")
+     *
      */
-    private function createDeleteForm(Contrat $contrat)
+    public function removeAction(Request $request)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('contrat_delete', array('id' => $contrat->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        try {
+            $em         = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('AppBundle:Contrat');
+            $contract = $repository->find($request->get('id'));
+            if (!$contract) {
+                throw $this->createNotFoundException('Unable to find Contract id.');
+            }
+            $em->remove($contract);
+            $em->flush();
+            return new ApiResponse(
+                [
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            return new ApiResponse(null, 404, $e->getMessage());
+        }
     }
 }

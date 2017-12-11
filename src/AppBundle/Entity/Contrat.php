@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="contrat")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Contrat
+class Contrat extends AbstractEntity
 {
     public static $defaultFieldOrder = "id";
     public static $defaultDirOrder = "asc";

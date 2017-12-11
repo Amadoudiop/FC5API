@@ -4,19 +4,20 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Club;
 use AdminBundle\Form\ClubType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Helper\Response\ApiResponse;
-use AdminBundle\Entity\AbstractEntity;
 use Exception;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use AdminBundle\Controller\JsonController;
 
 //
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+//use Symfony\Component\HttpFoundation\Response;
+//use AdminBundle\Entity\AbstractEntity;
+//use Symfony\Component\HttpFoundation\StreamedResponse;
+//use AdminBundle\Controller\JsonController;
+
 //use Doctrine\ORM\EntityManager;
 //use Doctrine\ORM\EntityRepository;
 //use Doctrine\ORM\Query;
@@ -181,7 +182,7 @@ class ClubController extends JsonController
         if (empty($club)) {
             return new ApiResponse(null, 404);
         }
-        $editForm = $this->createForm(ClubFormType::class, $club);
+        $editForm = $this->createForm(ClubType::class, $club);
         $editForm->submit($json);
         if ($editForm->isValid()) {
             $em->persist($club);
@@ -215,7 +216,7 @@ class ClubController extends JsonController
      * )
      *
      * @Route("/{id}/remove", name="clubRemove")
-     * @Method("POST")
+     * @Method("DELETE")
      *
      */
     public function removeAction(Request $request)

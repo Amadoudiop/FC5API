@@ -23,3 +23,7 @@ services:
           - '@fc5.paginator'
           - '@fc5.json_controller'
           - '@request_stack'
+
+    fc5.loadDataFixture:
+        class: AdminBundle\DataFixtures\ClubFixtures
+        tags: [doctrine.fixture.orm]

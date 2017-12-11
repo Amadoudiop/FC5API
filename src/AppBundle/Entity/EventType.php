@@ -2,16 +2,29 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * EventType
  *
  * @ORM\Table(name="event_type")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\EventTypeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class EventType
+class EventType extends AbstractEntity
 {
+
+    public static $defaultFieldOrder = "label";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'label',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'label',
+    ];
+
     /**
      * @var int
      *

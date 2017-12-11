@@ -1,136 +1,226 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Event;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AdminBundle\Form\EventType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use AdminBundle\Helper\Response\ApiResponse;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Exception;
+
 
 /**
  * Event controller.
  *
- * @Route("event")
+ * @Route("api/event")
  */
-class EventController extends Controller
+class EventController extends JsonController
 {
     /**
-     * Lists all event entities.
      *
-     * @Route("/", name="event_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="eventList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Events with orders, pagination and research",
+     *  section="Event",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=false, "description"="Items per page"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $events = $em->getRepository('AppBundle:Event')->findAll();
-
-        return $this->render('event/index.html.twig', array(
-            'events' => $events,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\Event',
+                    [
+                        'id',
+                        'name',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
-    /**
-     * Creates a new event entity.
-     *
-     * @Route("/new", name="event_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $event = new Event();
-        $form = $this->createForm('AppBundle\Form\EventType', $event);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("/new", name="eventCreate")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Creates a new event",
+     *     section="Event",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="label", "dataType"="string", "required"=true, "description"="Event label"},
+     *          {"name"="date", "dataType"="dateTime", "required"=true, "description"="Event date"},
+     *     }
+     * )
+     *
+     */
+    public function createAction(Request $request)
+    {
+        $json = $this->getJson($request)->toArray();
+
+        $event = new Event();
+        $form    = $this->createForm(EventType::class, $event);
+        $form->submit($json);
+
+        if (!$form->isValid()) {
+            return new ApiResponse(null, 422, $this->getErrorMessages($form));
+        } else {
+            $em   = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
-
-            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+            return new ApiResponse(
+                $event->serializeEntity()
+            );
         }
-
-        return $this->render('event/new.html.twig', array(
-            'event' => $event,
-            'form' => $form->createView(),
-        ));
     }
 
     /**
-     * Finds and displays a event entity.
+     * Get a event by id
      *
-     * @Route("/{id}", name="event_show")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get event",
+     *     section="Event"
+     * )
+     *
+     * @Route("/{id}", name="getEvent")
      * @Method("GET")
-     */
-    public function showAction(Event $event)
-    {
-        $deleteForm = $this->createDeleteForm($event);
-
-        return $this->render('event/show.html.twig', array(
-            'event' => $event,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing event entity.
      *
-     * @Route("/{id}/edit", name="event_edit")
-     * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Event $event)
+    public function getAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($event);
-        $editForm = $this->createForm('AppBundle\Form\EventType', $event);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Event');
+        $event = $repository->findOneById($request->get('id'));
+        if (empty($event)) {
+            return new ApiResponse(null, 404, ['Event not found']);
+        } else {
+            return new ApiResponse(
+                $event->serializeEntity()
+            );
         }
-
-        return $this->render('event/edit.html.twig', array(
-            'event' => $event,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
-    /**
-     * Deletes a event entity.
-     *
-     * @Route("/{id}", name="event_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Event $event)
-    {
-        $form = $this->createDeleteForm($event);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+    /**
+     * Edit a Event
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Edit a event",
+     *     section="Event",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="label", "dataType"="string", "required"=true, "description"="Event label"},
+     *     }
+     * )
+     *
+     * @Route("/{id}/edit", name="eventEdit")
+     * @Method("POST")
+     *
+     */
+    public function editAction(Request $request)
+    {
+        $json       = $this->getJson($request)->toArray();
+        $em         = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Event');
+        $event = $repository->findOneById($request->get('id'));
+        if (empty($event)) {
+            return new ApiResponse(null, 404);
+        }
+        $editForm = $this->createForm(EventFormType::class, $event);
+        $editForm->submit($json);
+        if ($editForm->isValid()) {
+            $em->persist($event);
+            $em->flush();
+            return new ApiResponse(
+                $event->serializeEntity()
+            );
+        } else {
+            return new ApiResponse(null, 422, $this->getErrorMessages($editForm));
+        }
+    }
+
+
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Delete existing Event",
+     *     section="Event",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     }
+     * )
+     *
+     * @Route("/{id}/remove", name="eventRemove")
+     * @Method("DELETE")
+     *
+     */
+    public function removeAction(Request $request)
+    {
+        try {
+            $em         = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('AppBundle:Event');
+            $event = $repository->find($request->get('id'));
+            if (!$event) {
+                throw $this->createNotFoundException('Unable to find Event id.');
+            }
             $em->remove($event);
             $em->flush();
+            return new ApiResponse(
+                [
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            return new ApiResponse(null, 404, $e->getMessage());
         }
-
-        return $this->redirectToRoute('event_index');
     }
 
-    /**
-     * Creates a form to delete a event entity.
-     *
-     * @param Event $event The event entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Event $event)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('event_delete', array('id' => $event->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
 }
