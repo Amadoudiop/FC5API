@@ -22,11 +22,9 @@ class UserController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['validation_groups'=>['Default', 'New']]);
 
-        //var_dump($request->request->all());die;
-
         $form->submit($request->request->all());
 
-        if ($form->isSubmitted()) {
+        if ($form->isValid()) {
             $encoder = $this->get('security.password_encoder');
 
             // le mot de passe en claire est encodé avant la sauvegarde
@@ -80,6 +78,7 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user, $options);
 
         $form->submit($request->request->all(), $clearMissing);
+        //var_dump($request->getContent());die;
 
         if ($form->isValid()) {
             // Si l'utilisateur veut changer son mot de passe
@@ -99,6 +98,31 @@ class UserController extends Controller
 
     private function userNotFound()
     {
-        return \FOS\RestBundle\View\View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('User not found');
+    }
+
+    /**
+     * @Route("/usersList", name="users_list")
+     * @Method({"GET"})
+     */
+    public function getUsersAction(Request $request)
+    {
+        $users = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('AppBundle:User')
+                ->findAll();
+        /* @var $users User[] */
+
+        $formatted = [];
+        foreach ($users as $user) {
+            $formatted[] = [
+               'id' => $user->getId(),
+               'firstname' => $user->getFirstname(),
+               'lastname' => $user->getLastname(),
+               'pseudonym' => $user->getPseudonym(),
+               'email' => $user->getEmail(),
+            ];
+        }
+
+        return new JsonResponse($formatted);
     }
 }

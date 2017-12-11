@@ -3,9 +3,8 @@
 security:
 
     providers:
-        my_entity_users:
-            entity:
-                class: AppBundle:User
+        auth_token_user_provider:
+            id: auth_token_user_provider
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -13,11 +12,13 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        secured_area:
+        main:
+            pattern: ^/
+            stateless: true
+            simple_preauth:
+                authenticator: auth_token_authenticator
+            provider: auth_token_user_provider
             anonymous: ~
-            logout:
-                path:   /logout
-                target: /
 
     encoders:
         AppBundle\Entity\User:

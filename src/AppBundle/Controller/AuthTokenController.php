@@ -51,11 +51,32 @@ class AuthTokenController extends Controller
         $em->persist($authToken);
         $em->flush();
 
-        return $authToken;
+        return new JsonResponse(['authToken' => $authToken->getValue()]);
     }
 
     private function invalidCredentials()
     {
         return \FOS\RestBundle\View\View::create(['message' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/auth-tokens/{id}")
+     */
+    public function removeAuthTokenAction(Request $request)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $authToken = $em->getRepository('AppBundle:AuthToken')
+                    ->find($request->get('id'));
+        /* @var $authToken AuthToken */
+
+        $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
+
+        if ($authToken && $authToken->getUser()->getId() === $connectedUser->getId()) {
+            $em->remove($authToken);
+            $em->flush();
+        } else {
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
+        }
     }
 }
