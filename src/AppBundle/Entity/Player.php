@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Player
@@ -36,6 +37,20 @@ class Player
     private $firstName;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="height", type="integer", length=3)
+     */
+    private $height;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="weight", type="integer", length=3)
+     */
+    private $weight;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255)
@@ -55,6 +70,13 @@ class Player
      * @ORM\JoinTable(name="players_postions")
      */
     private $positions;
+
+    /**
+     * Many Players have one Nationality.
+     * @ORM\ManyToOne(targetEntity="Nationality", inversedBy="players")
+     * @ORM\JoinColumn(name="nationality_id", referencedColumnName="id")
+     */
+    private $nationality;
 
 
     public function __construct()
@@ -167,5 +189,111 @@ class Player
     public function getRealClub()
     {
         return $this->realClub;
+    }
+
+    /**
+     * Set height
+     *
+     * @param integer $height
+     *
+     * @return Player
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * Set weight
+     *
+     * @param integer $weight
+     *
+     * @return Player
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get weight
+     *
+     * @return integer
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Add position
+     *
+     * @param \AppBundle\Entity\PlayerPosition $position
+     *
+     * @return Player
+     */
+    public function addPosition(\AppBundle\Entity\PlayerPosition $position)
+    {
+        $this->positions[] = $position;
+
+        return $this;
+    }
+
+    /**
+     * Remove position
+     *
+     * @param \AppBundle\Entity\PlayerPosition $position
+     */
+    public function removePosition(\AppBundle\Entity\PlayerPosition $position)
+    {
+        $this->positions->removeElement($position);
+    }
+
+    /**
+     * Get positions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPositions()
+    {
+        return $this->positions;
+    }
+
+    /**
+     * Set nationality
+     *
+     * @param \AppBundle\Entity\Nationality $nationality
+     *
+     * @return Player
+     */
+    public function setNationality(\AppBundle\Entity\Nationality $nationality = null)
+    {
+        $this->nationality = $nationality;
+
+        return $this;
+    }
+
+    /**
+     * Get nationality
+     *
+     * @return \AppBundle\Entity\Nationality
+     */
+    public function getNationality()
+    {
+        return $this->nationality;
     }
 }

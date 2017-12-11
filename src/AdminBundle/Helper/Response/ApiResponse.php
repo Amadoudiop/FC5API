@@ -3,7 +3,7 @@ namespace AdminBundle\Helper\Response;
 use Symfony\Component\HttpFoundation\Response;
 /**
  * Class ApiResponse
- * @package Sophrologie\CoreBundle\Helper\Response
+ * @package AdminBundle\Helper\Response
  */
 class ApiResponse extends Response
 {

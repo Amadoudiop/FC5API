@@ -3,36 +3,71 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Club;
+use AdminBundle\Form\ClubType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Helper\Response\ApiResponse;
+use AdminBundle\Entity\AbstractEntity;
+use Exception;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use AdminBundle\Controller\JsonController;
+
+//
+//use Doctrine\ORM\EntityManager;
+//use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\Query;
+//use Doctrine\ORM\Query\ResultSetMapping;
+//use DoctrineExtensions\Query\Mysql\IfElse;
+//
+
 
 
 /**
  * Club controller.
  *
- * @Route("club")
+ * @Route("api/club")
  */
-class ClubController extends Controller
+class ClubController extends JsonController
 {
     /**
-     * Lists all club entities.
      *
-     * @Route("/", name="club_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="clubList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Clubs with orders, pagination and research",
+     *  section="Club",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=false, "description"="Items per page"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $clubs = $em->getRepository('AppBundle:Club')->findAll();
-
-        return $this->render('club/index.html.twig', array(
-            'clubs' => $clubs,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\Club',
+                    [
+                        'id',
+                        'name',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
 
@@ -45,12 +80,12 @@ class ClubController extends Controller
      * @return \AdminBundle\Helper\Response\ApiResponse
      *
      * @ApiDoc(
-     *     description="Creates a new club entity",
+     *     description="Creates a new club",
      *     section="Club",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     },
@@ -65,13 +100,15 @@ class ClubController extends Controller
     public function createAction(Request $request)
     {
         $json = $this->getJson($request)->toArray();
-        $em   = $this->getDoctrine()->getManager();
+
         $club = new Club();
-        $form    = $this->createForm(ClubFormType::class, $club);
+        $form    = $this->createForm(ClubType::class, $club);
         $form->submit($json);
+
         if (!$form->isValid()) {
             return new ApiResponse(null, 422, $this->getErrorMessages($form));
         } else {
+            $em   = $this->getDoctrine()->getManager();
             $em->persist($club);
             $em->flush();
             return new ApiResponse(
@@ -86,7 +123,6 @@ class ClubController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \AdminBundle\Helper\Response\ApiResponse
-     *
      * @ApiDoc(
      *     description="get club",
      *     section="Club"
@@ -122,8 +158,8 @@ class ClubController extends Controller
      *     section="Club",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     },
@@ -171,8 +207,8 @@ class ClubController extends Controller
      *     section="Club",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     }

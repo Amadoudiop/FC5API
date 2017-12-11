@@ -2,16 +2,31 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ClubStat
  *
  * @ORM\Table(name="club_stat")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClubStatRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class ClubStat
+class ClubStat extends AbstractEntity
 {
+
+    public static $defaultFieldOrder = "label";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'label',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'label',
+        'shortLabel',
+    ];
+
+
     /**
      * @var int
      *

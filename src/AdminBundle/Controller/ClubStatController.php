@@ -1,37 +1,60 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AdminBundle\Controller;
 
 use AppBundle\Entity\ClubStat;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Helper\Response\ApiResponse;
+use Exception;
+
 
 /**
  * Clubstat controller.
  *
- * @Route("clubstat")
+ * @Route("api/clubstat")
  */
-class ClubStatController extends Controller
+class ClubStatController extends JsonController
 {
     /**
-     * Lists all clubStat entities.
+    /**
      *
-     * @Route("/", name="clubstat_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="clubStatList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="ClubStats with orders, pagination and research",
+     *  section="ClubStat",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['label', 'asc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=false, "description"="Items per page"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $clubStats = $em->getRepository('AppBundle:ClubStat')->findAll();
-
-        return $this->render('clubstat/index.html.twig', array(
-            'clubStats' => $clubStats,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\ClubStat',
+                    [
+                        'id',
+                        'label',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
     /**
@@ -47,8 +70,8 @@ class ClubStatController extends Controller
      *     section="ClubStat",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     },
@@ -63,13 +86,15 @@ class ClubStatController extends Controller
     public function createAction(Request $request)
     {
         $json = $this->getJson($request)->toArray();
-        $em   = $this->getDoctrine()->getManager();
+
         $clubStat = new ClubStat();
         $form    = $this->createForm(ClubStatFormType::class, $clubStat);
         $form->submit($json);
+
         if (!$form->isValid()) {
             return new ApiResponse(null, 422, $this->getErrorMessages($form));
         } else {
+            $em   = $this->getDoctrine()->getManager();
             $em->persist($clubStat);
             $em->flush();
             return new ApiResponse(
@@ -119,8 +144,8 @@ class ClubStatController extends Controller
      *     section="ClubStat",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     },
@@ -165,8 +190,8 @@ class ClubStatController extends Controller
      *     section="ClubStat",
      *     headers={
      *          {
-     *              "name"="X-API-TOKEN",
-     *              "description"="API Token",
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
      *              "required"=true
      *          }
      *     }
@@ -183,7 +208,7 @@ class ClubStatController extends Controller
             $repository = $em->getRepository('AppBundle:ClubStat');
             $clubStat = $repository->find($request->get('id'));
             if (!$clubStat) {
-                throw $this->createNotFoundException('Unable to find Club id.');
+                throw $this->createNotFoundException('Unable to find ClubStat id.');
             }
             $em->remove($clubStat);
             $em->flush();

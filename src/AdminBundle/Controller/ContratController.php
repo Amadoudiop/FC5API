@@ -1,60 +1,109 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Contrat;
+use AdminBundle\Form\ContractType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use AdminBundle\Helper\Response\ApiResponse;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Exception;
+
 
 /**
  * Contrat controller.
  *
- * @Route("contrat")
+ * @Route("api/contract")
  */
-class ContratController extends Controller
+class ContratController extends JsonController
 {
     /**
-     * Lists all contrat entities.
      *
-     * @Route("/", name="contrat_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="contractList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Contracts with orders, pagination and research",
+     *  section="Contract",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['id', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=false, "description"="Items per page"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $contrats = $em->getRepository('AppBundle:Contrat')->findAll();
-
-        return $this->render('contrat/index.html.twig', array(
-            'contrats' => $contrats,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\Contrat',
+                    [
+                        'id',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
+
     /**
-     * Creates a new contrat entity.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @Route("/new", name="contrat_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="contractCreate")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Creates a new contract",
+     *     section="Contract",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="salaire", "dataType"="integer", "required"=true, "description"="Player salary"},
+     *          {"name"="description", "dataType"="string", "required"=true, "description"="Contract description"},
+     *          {"name"="value", "dataType"="integer", "required"=true, "description"="Contract value"},
+     *          {"name"="dateStart", "dataType"="dateTime", "required"=true, "description"="Contract Date Start"},
+     *          {"name"="duration", "dataType"="dateTime", "required"=true, "description"="Contract Duration"},
+     *          {"name"="onGoing", "dataType"="boolean", "required"=true, "description"="Is the contract ongoing"},
+     *     }
+     * )
+     *
      */
-    public function newAction(Request $request)
+    public function createAction(Request $request)
     {
-        $contrat = new Contrat();
-        $form = $this->createForm('AppBundle\Form\ContratType', $contrat);
-        $form->handleRequest($request);
+        $json = $this->getJson($request)->toArray();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($contrat);
+        $contract = new Contrat();
+        $form    = $this->createForm(ContratType::class, $contract);
+        $form->submit($json);
+
+        if (!$form->isValid()) {
+            return new ApiResponse(null, 422, $this->getErrorMessages($form));
+        } else {
+            $em   = $this->getDoctrine()->getManager();
+            $em->persist($contract);
             $em->flush();
-
-            return $this->redirectToRoute('contrat_show', array('id' => $contrat->getId()));
+            return new ApiResponse(
+                $contract->serializeEntity()
+            );
         }
-
-        return $this->render('contrat/new.html.twig', array(
-            'contrat' => $contrat,
-            'form' => $form->createView(),
-        ));
     }
 
     /**

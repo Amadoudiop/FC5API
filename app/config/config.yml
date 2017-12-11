@@ -11,7 +11,7 @@ parameters:
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -24,6 +24,8 @@ framework:
         engines: ['twig']
     default_locale: '%locale%'
     trusted_hosts: ~
+    #added
+    #trusted_proxies: ~
     session:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
