@@ -105,5 +105,38 @@ class Club
     {
         return $this->blason;
     }
-}
 
+    /**
+     * Add clubStat
+     *
+     * @param \AppBundle\Entity\ClubStat $clubStat
+     *
+     * @return Club
+     */
+    public function addClubStat(\AppBundle\Entity\ClubStat $clubStat)
+    {
+        $this->clubStats[] = $clubStat;
+
+        return $this;
+    }
+
+    /**
+     * Remove clubStat
+     *
+     * @param \AppBundle\Entity\ClubStat $clubStat
+     */
+    public function removeClubStat(\AppBundle\Entity\ClubStat $clubStat)
+    {
+        $this->clubStats->removeElement($clubStat);
+    }
+
+    /**
+     * Get clubStats
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClubStats()
+    {
+        return $this->clubStats;
+    }
+}

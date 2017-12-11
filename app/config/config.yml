@@ -24,6 +24,8 @@ framework:
         engines: ['twig']
     default_locale: '%locale%'
     trusted_hosts: ~
+    #added
+    #trusted_proxies: ~
     session:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
@@ -35,6 +37,8 @@ framework:
     assets: ~
     php_errors:
         log: true
+    templating:
+        engines: ['twig']
 
 # Twig Configuration
 twig:
@@ -97,3 +101,17 @@ fos_rest:
             'Symfony\Component\Security\Core\Exception\BadCredentialsException': true
         codes:
             'Symfony\Component\Security\Core\Exception\BadCredentialsException': 401
+
+#Nelmio Api Doc
+nelmio_api_doc: ~
+
+
+#nelmio_api_doc:
+#    routes:
+#        path_patterns: # an array of regexps
+#            - ^/api
+#    documentation:
+#        info:
+#            title: FootballContest5
+#            description: The API of FootballContest5 !!
+#            version: 1.0.0

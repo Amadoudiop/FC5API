@@ -2,16 +2,37 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+
 
 /**
  * Contrat
  *
  * @ORM\Table(name="contrat")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ContratRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Contrat
+class Contrat extends AbstractEntity
 {
+    public static $defaultFieldOrder = "id";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'salaire',
+        'date_start',
+        'date_end',
+        'on_going',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'salaire',
+        'description',
+        'value',
+        'dateStart',
+        'duration',
+        'onGoing',
+    ];
+
     /**
      * @var int
      *
@@ -47,7 +68,7 @@ class Contrat
      *
      * @ORM\Column(name="date_start", type="date")
      */
-    private $date_start;
+    private $dateStart;
 
     /**
      * @var integer
@@ -61,7 +82,7 @@ class Contrat
      *
      * @ORM\Column(name="on_going", type="boolean")
      */
-    private $on_going;
+    private $onGoing;
 
 
     /**
@@ -155,7 +176,7 @@ class Contrat
      */
     public function setDateStart($dateStart)
     {
-        $this->date_start = $dateStart;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
@@ -167,7 +188,7 @@ class Contrat
      */
     public function getDateStart()
     {
-        return $this->date_start;
+        return $this->dateStart;
     }
 
     /**
@@ -177,7 +198,7 @@ class Contrat
      *
      * @return Contrat
      */
-    public function setDuration(\integer $duration)
+    public function setDuration($duration)
     {
         $this->duration = $duration;
 
@@ -203,7 +224,7 @@ class Contrat
      */
     public function setOnGoing($onGoing)
     {
-        $this->on_going = $onGoing;
+        $this->onGoing = $onGoing;
 
         return $this;
     }
@@ -215,6 +236,6 @@ class Contrat
      */
     public function getOnGoing()
     {
-        return $this->on_going;
+        return $this->onGoing;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -9,10 +10,24 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Club
  *
  * @ORM\Table(name="club")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClubRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Club
+class Club extends AbstractEntity
 {
+
+    public static $defaultFieldOrder = "name";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'name',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'name',
+        'blason',
+    ];
+
+
     /**
      * @var int
      *

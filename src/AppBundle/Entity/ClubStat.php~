@@ -130,5 +130,28 @@ class ClubStat
     {
         return $this->value;
     }
-}
 
+    /**
+     * Set club
+     *
+     * @param \AppBundle\Entity\Club $club
+     *
+     * @return ClubStat
+     */
+    public function setClub(\AppBundle\Entity\Club $club = null)
+    {
+        $this->club = $club;
+
+        return $this;
+    }
+
+    /**
+     * Get club
+     *
+     * @return \AppBundle\Entity\Club
+     */
+    public function getClub()
+    {
+        return $this->club;
+    }
+}
