@@ -23,6 +23,7 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user, ['validation_groups'=>['Default', 'New']]);
 
         $form->submit($request->request->all());
+        //dump($request->request->all());die;
 
         if ($form->isValid()) {
             $encoder = $this->get('security.password_encoder');
@@ -34,7 +35,9 @@ class UserController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($user);
             $em->flush();
+            //return new JsonResponse(['message' => "Your account has been saved"]);
             return $user;
+
         } else {
             return $form;
         }
@@ -77,7 +80,7 @@ class UserController extends Controller
 
         $form = $this->createForm(UserType::class, $user, $options);
 
-        $form->submit($request->request->all(), $clearMissing);
+        $form->submit($request->request->all()/*, $clearMissing*/);
         //var_dump($request->getContent());die;
 
         if ($form->isValid()) {

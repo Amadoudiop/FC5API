@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
 * @ORM\Entity()
@@ -22,21 +24,32 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     protected $pseudonym;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     protected $firstname;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      */
     protected $lastname;
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     protected $email;
 
@@ -45,6 +58,10 @@ class User implements UserInterface
      */
     protected $password;
 
+    /**
+     * @Assert\NotBlank(groups={"New", "FullUpdate"})
+     * @Assert\Length(min=7, max=50)
+     */
     public $plainPassword;
 
 
