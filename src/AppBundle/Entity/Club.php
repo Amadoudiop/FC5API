@@ -25,6 +25,7 @@ class Club extends AbstractEntity
         'id',
         'name',
         'blason',
+        'clubStats',
     ];
 
 

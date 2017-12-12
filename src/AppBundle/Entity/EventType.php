@@ -41,6 +41,12 @@ class EventType extends AbstractEntity
      */
     private $label;
 
+    /**
+     * One EventType has Many Event.
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="eventType")
+     */
+    private $events;
+
 
     /**
      * Get id
@@ -74,5 +80,46 @@ class EventType extends AbstractEntity
     public function getLabel()
     {
         return $this->label;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add event
+     *
+     * @param \AppBundle\Entity\Event $event
+     *
+     * @return EventType
+     */
+    public function addEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events[] = $event;
+
+        return $this;
+    }
+
+    /**
+     * Remove event
+     *
+     * @param \AppBundle\Entity\Event $event
+     */
+    public function removeEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events->removeElement($event);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEvents()
+    {
+        return $this->events;
     }
 }

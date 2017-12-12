@@ -2,16 +2,33 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Event
  *
  * @ORM\Table(name="event")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Event
+class Event extends AbstractEntity
 {
+    public static $defaultFieldOrder = "label";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'label',
+        'date',
+        'eventType.label',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'label',
+        'date',
+        'description',
+        'eventType.label',
+    ];
+
     /**
      * @var int
      *
@@ -41,6 +58,13 @@ class Event
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;
+
+    /**
+     * Many Events have one EventType.
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="events")
+     * @ORM\JoinColumn(name="event_type_id", referencedColumnName="id")
+     */
+    private $eventType;
 
 
     /**

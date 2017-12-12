@@ -13,19 +13,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ClubStat extends AbstractEntity
 {
-
     public static $defaultFieldOrder = "label";
     public static $defaultDirOrder = "asc";
     public static $fieldsOrder = [
         'id',
         'label',
+        'club.name'
     ];
     public static $fieldsApi = [
         'id',
         'label',
         'shortLabel',
+        'club.name',
     ];
-
 
     /**
      * @var int

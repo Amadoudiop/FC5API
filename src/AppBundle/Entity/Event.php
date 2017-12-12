@@ -19,12 +19,14 @@ class Event extends AbstractEntity
         'id',
         'label',
         'date',
+        'eventType.label',
     ];
     public static $fieldsApi = [
         'id',
         'label',
         'date',
         'description',
+        'eventType.label',
     ];
 
     /**
@@ -56,6 +58,13 @@ class Event extends AbstractEntity
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;
+
+    /**
+     * Many Events have one EventType.
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="events")
+     * @ORM\JoinColumn(name="event_type_id", referencedColumnName="id")
+     */
+    private $eventType;
 
 
     /**
@@ -138,5 +147,29 @@ class Event extends AbstractEntity
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set eventType
+     *
+     * @param \AppBundle\Entity\Event $eventType
+     *
+     * @return Event
+     */
+    public function setEventType(\AppBundle\Entity\Event $eventType = null)
+    {
+        $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    /**
+     * Get eventType
+     *
+     * @return \AppBundle\Entity\Event
+     */
+    public function getEventType()
+    {
+        return $this->eventType;
     }
 }

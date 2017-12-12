@@ -79,6 +79,7 @@ class ClubStatController extends JsonController
      *          {"name"="label", "dataType"="string", "required"=true, "description"="ClubStat label"},
      *          {"name"="value", "dataType"="string", "required"=true, "description"="ClubStat value"},
      *          {"name"="shortLabel", "dataType"="string", "required"=true, "description"="ClubStat short label"},
+     *          {"name"="club.name", "dataType"="string", "required"=true, "description"="ClubStat club"},
      *     }
      * )
      *
