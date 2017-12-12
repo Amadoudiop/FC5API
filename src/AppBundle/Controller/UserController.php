@@ -10,12 +10,25 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
 use AppBundle\Form\Type\UserType;
 use AppBundle\Entity\User;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class UserController extends Controller
 {
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
-     * @Rest\Post("/users")
+     * @Rest\Post("/createUser")
+     *
+     * @ApiDoc(
+     *     description="Registration",
+     *     section="User",
+     *     parameters={
+     *          {"name"="firstname", "dataType"="string", "required"=true, "description"="User firstname"},
+     *          {"name"="lastname", "dataType"="string", "required"=true, "description"="User lastname"},
+     *          {"name"="email", "dataType"="string", "required"=true, "description"="User email"},
+     *          {"name"="pseudonym", "dataType"="string", "required"=true, "description"="User pseudonym"},
+     *          {"name"="plainPassword", "dataType"="password", "required"=true, "description"="User password"},
+     *     }
+     * )
      */
     public function postUsersAction(Request $request)
     {
@@ -46,6 +59,25 @@ class UserController extends Controller
      /**
      * @Rest\View(serializerGroups={"user"})
      * @Rest\Put("/users/{id}")
+     *
+     * @ApiDoc(
+     *     description="Edit a user",
+     *     section="User",
+     *      headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="firstname", "dataType"="string", "required"=true, "description"="User firstname"},
+     *          {"name"="lastname", "dataType"="string", "required"=true, "description"="User lastname"},
+     *          {"name"="email", "dataType"="string", "required"=true, "description"="User email"},
+     *          {"name"="pseudonym", "dataType"="string", "required"=true, "description"="User pseudonym"},
+     *          {"name"="plainPassword", "dataType"="password", "required"=true, "description"="User password"},
+     *     }
+     * )
      */
     public function updateUserAction(Request $request)
     {
@@ -107,6 +139,18 @@ class UserController extends Controller
     /**
      * @Route("/usersList", name="users_list")
      * @Method({"GET"})
+     *
+     * @ApiDoc(
+     *     description="Users list",
+     *     section="User",
+     *      headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     * )
      */
     public function getUsersAction(Request $request)
     {
