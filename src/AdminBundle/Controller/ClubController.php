@@ -51,7 +51,7 @@ class ClubController extends JsonController
      *  parameters={
      *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
      *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
-     *      {"name"="perPage", "dataType"="integer", "required"=false, "description"="Items per page"},
+     *      {"name"="perPage", "dataType"="integer", "required"=true, "description"="Items per page send if you want all of them -1"},
      *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
      *  }
      * )
