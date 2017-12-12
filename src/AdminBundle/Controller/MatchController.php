@@ -3,134 +3,219 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Match;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AdminBundle\Form\MatchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AdminBundle\Helper\Response\ApiResponse;
+use Exception;
 
 /**
  * Match controller.
  *
- * @Route("match")
+ * @Route("api/match")
  */
-class MatchController extends Controller
+class MatchController extends JsonController
 {
     /**
-     * Lists all match entities.
      *
-     * @Route("/", name="match_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="matchList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Matchs with orders, pagination and research",
+     *  section="Match",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=true, "description"="Items per page send if you want all of them -1"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $matches = $em->getRepository('AppBundle:Match')->findAll();
-
-        return $this->render('match/index.html.twig', array(
-            'matches' => $matches,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\Match',
+                    [
+                        'id',
+                        'name',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
     /**
-     * Creates a new match entity.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @Route("/new", name="match_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="match_create")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Creates a new match",
+     *     section="Match",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="Match name"},
+     *          {"name"="blason", "dataType"="string", "required"=true, "description"="Match blason"},
+     *          {"name"="matchStats", "dataType"="string", "required"=true, "description"="Match stats"},
+     *     }
+     * )
+     *
      */
-    public function newAction(Request $request)
+    public function createAction(Request $request)
     {
-        $match = new Match();
-        $form = $this->createForm('AppBundle\Form\MatchType', $match);
-        $form->handleRequest($request);
+        $json = $this->getJson($request)->toArray();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        $match = new Match();
+        $form    = $this->createForm(MatchType::class, $match);
+        $form->submit($json);
+
+        if (!$form->isValid()) {
+            return new ApiResponse(null, 422, $this->getErrorMessages($form));
+        } else {
+            $em   = $this->getDoctrine()->getManager();
             $em->persist($match);
             $em->flush();
-
-            return $this->redirectToRoute('match_show', array('id' => $match->getId()));
+            return new ApiResponse(
+                $match->serializeEntity()
+            );
         }
-
-        return $this->render('match/new.html.twig', array(
-            'match' => $match,
-            'form' => $form->createView(),
-        ));
     }
 
     /**
-     * Finds and displays a match entity.
+     * Get a match by id
      *
-     * @Route("/{id}", name="match_show")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get match",
+     *     section="Match"
+     * )
+     *
+     * @Route("/{id}", name="getMatch")
      * @Method("GET")
+     *
      */
-    public function showAction(Match $match)
+    public function getAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($match);
-
-        return $this->render('match/show.html.twig', array(
-            'match' => $match,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Match');
+        $match = $repository->findOneById($request->get('id'));
+        if (empty($match)) {
+            return new ApiResponse(null, 404, ['Match not found']);
+        } else {
+            return new ApiResponse(
+                $match->serializeEntity()
+            );
+        }
     }
 
     /**
-     * Displays a form to edit an existing match entity.
+     * Edit a Match
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Edit a match",
+     *     section="Match",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="Name", "dataType"="string", "required"=true, "description"="Match name"},
+     *     }
+     * )
      *
      * @Route("/{id}/edit", name="match_edit")
-     * @Method({"GET", "POST"})
+     * @Method("POST")
+     *
      */
-    public function editAction(Request $request, Match $match)
+    public function editAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($match);
-        $editForm = $this->createForm('AppBundle\Form\MatchType', $match);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('match_edit', array('id' => $match->getId()));
+        $json       = $this->getJson($request)->toArray();
+        $em         = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Match');
+        $match = $repository->findOneById($request->get('id'));
+        if (empty($match)) {
+            return new ApiResponse(null, 404);
         }
-
-        return $this->render('match/edit.html.twig', array(
-            'match' => $match,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $editForm = $this->createForm(MatchType::class, $match);
+        $editForm->submit($json);
+        if ($editForm->isValid()) {
+            $em->persist($match);
+            $em->flush();
+            return new ApiResponse(
+                $match->serializeEntity()
+            );
+        } else {
+            return new ApiResponse(null, 422, $this->getErrorMessages($editForm));
+        }
     }
 
     /**
-     * Deletes a match entity.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @Route("/{id}", name="match_delete")
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Delete existing Match",
+     *     section="Match",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     }
+     * )
+     *
+     * @Route("/{id}/remove", name="matchRemove")
      * @Method("DELETE")
+     *
      */
-    public function deleteAction(Request $request, Match $match)
+    public function removeAction(Request $request)
     {
-        $form = $this->createDeleteForm($match);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        try {
+            $em         = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('AppBundle:Match');
+            $match = $repository->find($request->get('id'));
+            if (!$match) {
+                throw $this->createNotFoundException('Unable to find Match id.');
+            }
             $em->remove($match);
             $em->flush();
+            return new ApiResponse(
+                [
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            return new ApiResponse(null, 404, $e->getMessage());
         }
-
-        return $this->redirectToRoute('match_index');
-    }
-
-    /**
-     * Creates a form to delete a match entity.
-     *
-     * @param Match $match The match entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Match $match)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('match_delete', array('id' => $match->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

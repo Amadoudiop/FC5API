@@ -2,16 +2,30 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * League
  *
  * @ORM\Table(name="league")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\LeagueRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class League
+class League extends AbstractEntity
 {
+    public static $defaultFieldOrder = "name";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'name',
+        'level',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'name',
+        'level',
+    ];
+
     /**
      * @var int
      *

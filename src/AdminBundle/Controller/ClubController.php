@@ -71,7 +71,6 @@ class ClubController extends JsonController
         );
     }
 
-
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -146,7 +145,6 @@ class ClubController extends JsonController
         }
     }
 
-
     /**
      * Edit a Club
      *
@@ -195,9 +193,6 @@ class ClubController extends JsonController
         }
     }
 
-
-
-
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -239,7 +234,4 @@ class ClubController extends JsonController
             return new ApiResponse(null, 404, $e->getMessage());
         }
     }
-
-
-
 }

@@ -3,134 +3,219 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\LeagueResult;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AdminBundle\Form\LeagueResultType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AdminBundle\Helper\Response\ApiResponse;
+use Exception;
 
 /**
  * Leagueresult controller.
  *
  * @Route("leagueresult")
  */
-class LeagueResultController extends Controller
+class LeagueResultController extends JsonController
 {
     /**
-     * Lists all leagueResult entities.
      *
-     * @Route("/", name="leagueresult_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="leagueResultList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="LeagueResults with orders, pagination and research",
+     *  section="LeagueResult",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['label', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=true, "description"="Items per page (default -1)"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $leagueResults = $em->getRepository('AppBundle:LeagueResult')->findAll();
-
-        return $this->render('leagueresult/index.html.twig', array(
-            'leagueResults' => $leagueResults,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\LeagueResult',
+                    [
+                        'id',
+                        'label',
+                    ]
+                )
+                ->getResults()
+        );
     }
 
     /**
-     * Creates a new leagueResult entity.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @Route("/new", name="leagueresult_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="leagueResultCreate")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Creates a new leagueResult",
+     *     section="LeagueResult",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="name", "dataType"="string", "required"=true, "description"="LeagueResult name"},
+     *          {"name"="blason", "dataType"="string", "required"=true, "description"="LeagueResult blason"},
+     *          {"name"="leagueResultStats", "dataType"="string", "required"=true, "description"="LeagueResult stats"},
+     *     }
+     * )
+     *
      */
-    public function newAction(Request $request)
+    public function createAction(Request $request)
     {
-        $leagueResult = new Leagueresult();
-        $form = $this->createForm('AppBundle\Form\LeagueResultType', $leagueResult);
-        $form->handleRequest($request);
+        $json = $this->getJson($request)->toArray();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        $leagueResult = new LeagueResult();
+        $form    = $this->createForm(LeagueResultType::class, $leagueResult);
+        $form->submit($json);
+
+        if (!$form->isValid()) {
+            return new ApiResponse(null, 422, $this->getErrorMessages($form));
+        } else {
+            $em   = $this->getDoctrine()->getManager();
             $em->persist($leagueResult);
             $em->flush();
-
-            return $this->redirectToRoute('leagueresult_show', array('id' => $leagueResult->getId()));
+            return new ApiResponse(
+                $leagueResult->serializeEntity()
+            );
         }
-
-        return $this->render('leagueresult/new.html.twig', array(
-            'leagueResult' => $leagueResult,
-            'form' => $form->createView(),
-        ));
     }
 
     /**
-     * Finds and displays a leagueResult entity.
+     * Get a leagueResult by id
      *
-     * @Route("/{id}", name="leagueresult_show")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get leagueResult",
+     *     section="LeagueResult"
+     * )
+     *
+     * @Route("/{id}", name="getLeagueResult")
      * @Method("GET")
-     */
-    public function showAction(LeagueResult $leagueResult)
-    {
-        $deleteForm = $this->createDeleteForm($leagueResult);
-
-        return $this->render('leagueresult/show.html.twig', array(
-            'leagueResult' => $leagueResult,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing leagueResult entity.
      *
-     * @Route("/{id}/edit", name="leagueresult_edit")
-     * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, LeagueResult $leagueResult)
+    public function getAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($leagueResult);
-        $editForm = $this->createForm('AppBundle\Form\LeagueResultType', $leagueResult);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('leagueresult_edit', array('id' => $leagueResult->getId()));
+        $repository = $this->getDoctrine()->getRepository('AppBundle:LeagueResult');
+        $leagueResult = $repository->findOneById($request->get('id'));
+        if (empty($leagueResult)) {
+            return new ApiResponse(null, 404, ['LeagueResult not found']);
+        } else {
+            return new ApiResponse(
+                $leagueResult->serializeEntity()
+            );
         }
-
-        return $this->render('leagueresult/edit.html.twig', array(
-            'leagueResult' => $leagueResult,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
     /**
-     * Deletes a leagueResult entity.
+     * Edit a LeagueResult
      *
-     * @Route("/{id}", name="leagueresult_delete")
-     * @Method("DELETE")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Edit a leagueResult",
+     *     section="LeagueResult",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     *     parameters={
+     *          {"name"="Name", "dataType"="string", "required"=true, "description"="LeagueResult name"},
+     *     }
+     * )
+     *
+     * @Route("/{id}/edit", name="leagueResultEdit")
+     * @Method("POST")
+     *
      */
-    public function deleteAction(Request $request, LeagueResult $leagueResult)
+    public function editAction(Request $request)
     {
-        $form = $this->createDeleteForm($leagueResult);
-        $form->handleRequest($request);
+        $json       = $this->getJson($request)->toArray();
+        $em         = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:LeagueResult');
+        $leagueResult = $repository->findOneById($request->get('id'));
+        if (empty($leagueResult)) {
+            return new ApiResponse(null, 404);
+        }
+        $editForm = $this->createForm(LeagueResultType::class, $leagueResult);
+        $editForm->submit($json);
+        if ($editForm->isValid()) {
+            $em->persist($leagueResult);
+            $em->flush();
+            return new ApiResponse(
+                $leagueResult->serializeEntity()
+            );
+        } else {
+            return new ApiResponse(null, 422, $this->getErrorMessages($editForm));
+        }
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc(
+     *     description="Delete existing LeagueResult",
+     *     section="LeagueResult",
+     *     headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     }
+     * )
+     *
+     * @Route("/{id}/remove", name="leagueResultRemove")
+     * @Method("DELETE")
+     *
+     */
+    public function removeAction(Request $request)
+    {
+        try {
+            $em         = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('AppBundle:LeagueResult');
+            $leagueResult = $repository->find($request->get('id'));
+            if (!$leagueResult) {
+                throw $this->createNotFoundException('Unable to find LeagueResult id.');
+            }
             $em->remove($leagueResult);
             $em->flush();
+            return new ApiResponse(
+                [
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            return new ApiResponse(null, 404, $e->getMessage());
         }
-
-        return $this->redirectToRoute('leagueresult_index');
-    }
-
-    /**
-     * Creates a form to delete a leagueResult entity.
-     *
-     * @param LeagueResult $leagueResult The leagueResult entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(LeagueResult $leagueResult)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('leagueresult_delete', array('id' => $leagueResult->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

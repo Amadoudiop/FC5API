@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Club extends AbstractEntity
 {
-
     public static $defaultFieldOrder = "name";
     public static $defaultDirOrder = "asc";
     public static $fieldsOrder = [
@@ -27,7 +26,6 @@ class Club extends AbstractEntity
         'blason',
         'clubStats',
     ];
-
 
     /**
      * @var int
