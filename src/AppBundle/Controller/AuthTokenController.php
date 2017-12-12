@@ -9,12 +9,21 @@ use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les anno
 use AppBundle\Form\Type\CredentialsType;
 use AppBundle\Entity\AuthToken;
 use AppBundle\Entity\Credentials;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class AuthTokenController extends Controller
 {
     /**
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"auth-token"})
      * @Rest\Post("/auth-tokens")
+     * @ApiDoc(
+     *     description="Connection",
+     *     section="User",
+     *     parameters={
+     *          {"name"="login", "dataType"="string", "required"=true, "description"="User email"},
+     *          {"name"="password", "dataType"="password", "required"=true, "description"="User password"},
+     *     }
+     * )
      */
     public function postAuthTokensAction(Request $request)
     {
@@ -62,6 +71,18 @@ class AuthTokenController extends Controller
     /**
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/auth-tokens/{id}")
+     *
+     * @ApiDoc(
+     *     description="Delete a user token",
+     *     section="User",
+     *      headers={
+     *          {
+     *              "name"="X-Auth-Token",
+     *              "description"="Auth Token",
+     *              "required"=true
+     *          }
+     *     },
+     * )
      */
     public function removeAuthTokenAction(Request $request)
     {
