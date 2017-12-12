@@ -16,7 +16,18 @@ use Symfony\Component\Routing\RouterInterface;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     private $em;
+    
+    /**
+    * @var \Symfony\Component\Routing\RouterInterface
+    */
     private $router;
+
+    /**
+     * Default message for authentication failure.
+     *
+     * @var string
+     */
+    private $failMessage = 'Invalid credentials';
 
     public function __construct(EntityManager $em, RouterInterface $router)
     {
@@ -26,10 +37,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-        if ($request->getPathInfo() != '/login' || !$request->isMethod('POST')) {
+        /*if ($request->getPathInfo() != '/login' || !$request->isMethod('POST')) {
             return;
-        }
-
+        }*/
+        //var_dump($request->request);die;
         return [
             'username' => $request->request->get('_username'),
             'password' => $request->request->get('_password')
@@ -38,38 +49,44 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+        //var_dump($credentials);die;
         $username = $credentials['username'];
 
-        // this looks like a weird username
-        if (substr($username, 0, 1) == '@') {
-            throw new CustomUserMessageAuthenticationException(
-                'Starting a username with @ is weird, don\'t you think?'
-            );
-        }
+        //var_dump($username);die;
 
-        return $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
+        return $this->em->getRepository('AppBundle:User')->findOneBy(['email' => $username]);
+
+        //var_dump($user);die;
 
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        //var_dump($credentials);die;
         if ($credentials['password'] != 'fc5api') {
             return;
         }
+
+        return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        //$request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
-        $url = $this->router->generate('login');
-        return new RedirectResponse($url);
+        //$url = $this->router->generate('login');
+        //return new RedirectResponse($url);
+
+        return new JsonResponse(array('message' => $exception->getMessageKey()), Response::HTTP_FORBIDDEN);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $url = $this->router->generate('homepage');
-        return new RedirectResponse($url);
+        //$url = $this->router->generate('homepage');
+        //return new RedirectResponse($url);
+
+        return new JsonResponse('Success');
+
     }
 
     public function supportsRememberMe()
@@ -79,7 +96,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $url = $this->router->generate('login');
-        return new RedirectResponse($url);
+        return new JsonResponse('Authorization header required', 401);
     }
 }

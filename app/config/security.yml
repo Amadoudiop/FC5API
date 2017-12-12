@@ -3,9 +3,8 @@
 security:
 
     providers:
-        my_entity_users:
-            entity:
-                class: AppBundle:User
+        auth_token_user_provider:
+            id: auth_token_user_provider
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -14,9 +13,14 @@ security:
             security: false
 
         main:
+            pattern: ^/
+            stateless: true
+            simple_preauth:
+                authenticator: auth_token_authenticator
+            provider: auth_token_user_provider
             anonymous: ~
-            logout: ~
 
-            guard:
-                authenticators:
-                    - token_authenticator
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 12
