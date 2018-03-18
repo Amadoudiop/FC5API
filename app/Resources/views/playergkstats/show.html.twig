@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playergkstat</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ playerGKStat.id }}</td>
+            </tr>
+            <tr>
+                <th>Diving</th>
+                <td>{{ playerGKStat.diving }}</td>
+            </tr>
+            <tr>
+                <th>Handling</th>
+                <td>{{ playerGKStat.handling }}</td>
+            </tr>
+            <tr>
+                <th>Kicking</th>
+                <td>{{ playerGKStat.kicking }}</td>
+            </tr>
+            <tr>
+                <th>Positioning</th>
+                <td>{{ playerGKStat.positioning }}</td>
+            </tr>
+            <tr>
+                <th>Reflexes</th>
+                <td>{{ playerGKStat.reflexes }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playergkstats_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('playergkstats_edit', { 'id': playerGKStat.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

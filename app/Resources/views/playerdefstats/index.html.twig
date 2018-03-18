@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playerdefstats list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Heading_accuracy</th>
+                <th>Interceptions</th>
+                <th>Jumping</th>
+                <th>Marking</th>
+                <th>Reactions</th>
+                <th>Sliding_tackle</th>
+                <th>Standing_tackle</th>
+                <th>Strength</th>
+                <th>Stamina</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for playerDEFStat in playerDEFStats %}
+            <tr>
+                <td><a href="{{ path('playerdefstats_show', { 'id': playerDEFStat.id }) }}">{{ playerDEFStat.id }}</a></td>
+                <td>{{ playerDEFStat.headingaccuracy }}</td>
+                <td>{{ playerDEFStat.interceptions }}</td>
+                <td>{{ playerDEFStat.jumping }}</td>
+                <td>{{ playerDEFStat.marking }}</td>
+                <td>{{ playerDEFStat.reactions }}</td>
+                <td>{{ playerDEFStat.slidingtackle }}</td>
+                <td>{{ playerDEFStat.standingtackle }}</td>
+                <td>{{ playerDEFStat.strength }}</td>
+                <td>{{ playerDEFStat.stamina }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('playerdefstats_show', { 'id': playerDEFStat.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('playerdefstats_edit', { 'id': playerDEFStat.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playerdefstats_new') }}">Create a new playerDEFStat</a>
+        </li>
+    </ul>
+{% endblock %}

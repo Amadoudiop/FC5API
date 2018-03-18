@@ -1,3 +1,19 @@
+app_player_gk_stats:
+    resource: "@AppBundle/Controller/PlayerGKStatsController.php"
+    type:     annotation
+
+app_player_def_stats:
+    resource: "@AppBundle/Controller/PlayerDEFStatsController.php"
+    type:     annotation
+
+app_player_spe_stats:
+    resource: "@AppBundle/Controller/PlayerSPEStatsController.php"
+    type:     annotation
+
+app_player_atk_stats:
+    resource: "@AppBundle/Controller/PlayerATKStatsController.php"
+    type:     annotation
+
 app_stadium:
     resource: "@AppBundle/Controller/StadiumController.php"
     type:     annotation

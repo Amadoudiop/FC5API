@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playerspestat</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ playerSPEStat.id }}</td>
+            </tr>
+            <tr>
+                <th>Acceleration</th>
+                <td>{{ playerSPEStat.acceleration }}</td>
+            </tr>
+            <tr>
+                <th>Aggression</th>
+                <td>{{ playerSPEStat.aggression }}</td>
+            </tr>
+            <tr>
+                <th>Agility</th>
+                <td>{{ playerSPEStat.agility }}</td>
+            </tr>
+            <tr>
+                <th>Balance</th>
+                <td>{{ playerSPEStat.balance }}</td>
+            </tr>
+            <tr>
+                <th>Freekick_accuracy</th>
+                <td>{{ playerSPEStat.freekickaccuracy }}</td>
+            </tr>
+            <tr>
+                <th>Short_passing</th>
+                <td>{{ playerSPEStat.shortpassing }}</td>
+            </tr>
+            <tr>
+                <th>Sprint_speed</th>
+                <td>{{ playerSPEStat.sprintspeed }}</td>
+            </tr>
+            <tr>
+                <th>Long_passing</th>
+                <td>{{ playerSPEStat.longpassing }}</td>
+            </tr>
+            <tr>
+                <th>Positioning</th>
+                <td>{{ playerSPEStat.positioning }}</td>
+            </tr>
+            <tr>
+                <th>Vision</th>
+                <td>{{ playerSPEStat.vision }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playerspestats_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('playerspestats_edit', { 'id': playerSPEStat.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
