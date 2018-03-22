@@ -15,13 +15,14 @@ use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormInterface;
 use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\View\View;
  
 class RegistrationController extends BaseController
 {
     public function __construct()
     {
     }
-    
+
     /**
      * @Route("/register", name="user_register")
      * @Method("POST")
@@ -56,9 +57,9 @@ class RegistrationController extends BaseController
             $userManager->updateUser($user);
  
             $response = new Response($this->serialize('User created.'), Response::HTTP_CREATED);
-        } /*else {
-            throw new BadRequestHttpException();
-        }*/
+        } else {
+            return new View($form, Response::HTTP_BAD_REQUEST);
+        }
  
         return $this->setBaseHeaders($response);
     }
