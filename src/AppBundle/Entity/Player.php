@@ -3,16 +3,58 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Player
  *
  * @ORM\Table(name="player")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Player
+class Player extends AbstractEntity
 {
+    public static $defaultFieldOrder = "commonName";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'commonName',
+        'lastName',
+        'firstName',
+        'height',
+        'weight',
+        'birthDate',
+        'age',
+        'foot',
+        'weakFoot',
+        'isGK',
+        'image',
+        'realClub',
+        'composure',
+        'potential',
+        'rating',
+        'playerATKStats',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'commonName',
+        'lastName',
+        'firstName',
+        'height',
+        'weight',
+        'birthDate',
+        'age',
+        'foot',
+        'weakFoot',
+        'isGK',
+        'image',
+        'realClub',
+        'composure',
+        'potential',
+        'rating',
+        'playerATKStats',
+    ];
+
     /**
      * @var int
      *
@@ -143,7 +185,7 @@ class Player
 
     /**
      * One Player has One PlayerATKStats.
-     * @ORM\OneToOne(targetEntity="PlayerATKStats")
+     * @ORM\OneToOne(targetEntity="PlayerATKStats", fetch="EAGER")
      * @ORM\JoinColumn(name="player_atk_stats_id", referencedColumnName="id")
      */
     private $playerATKStats;

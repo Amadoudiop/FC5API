@@ -3,33 +3,112 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Player;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use AdminBundle\Helper\Response\ApiResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AdminBundle\Controller\JsonController;
+use Exception;
 
 /**
  * Player controller.
  *
- * @Route("player")
+ * @Route("api/player")
  */
-class PlayerController extends Controller
+class PlayerController extends JsonController
 {
     /**
-     * Lists all player entities.
      *
-     * @Route("/", name="player_index")
-     * @Method("GET")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("s", name="playerList")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Players with orders, pagination and research",
+     *  section="Player",
+     *
+     *  parameters={
+     *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
+     *      {"name"="page", "dataType"="integer", "required"=false, "description"="Page number (1 by default)"},
+     *      {"name"="perPage", "dataType"="integer", "required"=true, "description"="Items per page send if you want all of them -1"},
+     *      {"name"="search", "dataType"="string", "required"=false, "description"="Search on multiple columns"}
+     *  }
+     * )
      */
-    public function indexAction()
+    public function listAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $players = $em->getRepository('AppBundle:Player')->findAll();
-
-        return $this->render('player/index.html.twig', array(
-            'players' => $players,
-        ));
+        return new ApiResponse(
+            $this->get('fc5.entities_list_handler')
+                ->handleList(
+                    'AppBundle\Entity\Player',
+                    [
+                        'id',
+                        'commonName',
+                        'lastName',
+                        'firstName',
+                        'height',
+                        'weight',
+                        'birthDate',
+                        'age',
+                        'foot',
+                        'weakFoot',
+                        'isGK',
+                        'image',
+                        'realClub',
+                        'composure',
+                        'potential',
+                        'rating',
+                        'playerATKStats',
+                    ]
+                )
+                ->getResults()
+        );
     }
+
+
+
+    /**
+     * Get a player by id
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get player",
+     *     section="Player"
+     * )
+     *
+     * @Route("/{id}", name="getPlayer")
+     * @Method("GET")
+     *
+     */
+    public function getAction(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Player');
+        $player = $repository->findOneById($request->get('id'));
+//        dump($player->serializeEntity());die;
+        if (empty($player)) {
+            return new ApiResponse(null, 404, ['Player not found']);
+        } else {
+            return new ApiResponse(
+                $player->serializeEntity()
+            );
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * Creates a new player entity.
