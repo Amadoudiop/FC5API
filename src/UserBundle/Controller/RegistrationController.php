@@ -16,6 +16,7 @@ use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormInterface;
 use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\View\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  
 class RegistrationController extends BaseController
 {
@@ -24,8 +25,28 @@ class RegistrationController extends BaseController
     }
 
     /**
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @Route("/register", name="user_register")
      * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Creates a new user",
+     *     section="User",
+     *     parameters={
+     *          {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
+     *          {"name"="email", "dataType"="string", "required"=true, "description"="User email"},
+     *          {"name"="plainPassword", "dataType"="array", "required"=true, "format"="[ ['first', 'second'] ]", "description"="User password"},
+     *     },
+     *    statusCodes={
+     *         201="Returned when created",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
      */
     public function registerAction(Request $request)
     {

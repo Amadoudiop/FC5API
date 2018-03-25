@@ -68,13 +68,6 @@ class ContratController extends JsonController
      * @ApiDoc(
      *     description="Creates a new contract",
      *     section="Contract",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="salaire", "dataType"="integer", "required"=true, "description"="Player salary"},
      *          {"name"="description", "dataType"="string", "required"=true, "description"="Contract description"},
@@ -144,13 +137,6 @@ class ContratController extends JsonController
      * @ApiDoc(
      *     description="Edit a contract",
      *     section="Contract",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="id", "dataType"="string", "required"=true, "description"="Contract id"},
      *     }

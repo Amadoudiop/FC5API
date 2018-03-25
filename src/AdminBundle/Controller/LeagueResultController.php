@@ -66,13 +66,6 @@ class LeagueResultController extends JsonController
      * @ApiDoc(
      *     description="Creates a new leagueResult",
      *     section="LeagueResult",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="name", "dataType"="string", "required"=true, "description"="LeagueResult name"},
      *          {"name"="blason", "dataType"="string", "required"=true, "description"="LeagueResult blason"},
@@ -139,13 +132,6 @@ class LeagueResultController extends JsonController
      * @ApiDoc(
      *     description="Edit a leagueResult",
      *     section="LeagueResult",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="LeagueResult name"},
      *     }
