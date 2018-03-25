@@ -31,7 +31,7 @@ class Nationality
     /**
      * @var string
      *
-     * @ORM\Column(name="short_label", type="string", length=5)
+     * @ORM\Column(name="short_label", type="string", length=125)
      */
     private $shortLabel;
 

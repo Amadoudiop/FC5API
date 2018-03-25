@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playerspestats list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Acceleration</th>
+                <th>Aggression</th>
+                <th>Agility</th>
+                <th>Balance</th>
+                <th>Freekick_accuracy</th>
+                <th>Short_passing</th>
+                <th>Sprint_speed</th>
+                <th>Long_passing</th>
+                <th>Positioning</th>
+                <th>Vision</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for playerSPEStat in playerSPEStats %}
+            <tr>
+                <td><a href="{{ path('playerspestats_show', { 'id': playerSPEStat.id }) }}">{{ playerSPEStat.id }}</a></td>
+                <td>{{ playerSPEStat.acceleration }}</td>
+                <td>{{ playerSPEStat.aggression }}</td>
+                <td>{{ playerSPEStat.agility }}</td>
+                <td>{{ playerSPEStat.balance }}</td>
+                <td>{{ playerSPEStat.freekickaccuracy }}</td>
+                <td>{{ playerSPEStat.shortpassing }}</td>
+                <td>{{ playerSPEStat.sprintspeed }}</td>
+                <td>{{ playerSPEStat.longpassing }}</td>
+                <td>{{ playerSPEStat.positioning }}</td>
+                <td>{{ playerSPEStat.vision }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('playerspestats_show', { 'id': playerSPEStat.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('playerspestats_edit', { 'id': playerSPEStat.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playerspestats_new') }}">Create a new playerSPEStat</a>
+        </li>
+    </ul>
+{% endblock %}

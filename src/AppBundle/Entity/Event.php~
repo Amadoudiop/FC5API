@@ -148,4 +148,28 @@ class Event extends AbstractEntity
     {
         return $this->description;
     }
+
+    /**
+     * Set eventType
+     *
+     * @param \AppBundle\Entity\Event $eventType
+     *
+     * @return Event
+     */
+    public function setEventType(\AppBundle\Entity\Event $eventType = null)
+    {
+        $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    /**
+     * Get eventType
+     *
+     * @return \AppBundle\Entity\Event
+     */
+    public function getEventType()
+    {
+        return $this->eventType;
+    }
 }

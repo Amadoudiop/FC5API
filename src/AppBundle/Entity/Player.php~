@@ -25,6 +25,13 @@ class Player
     /**
      * @var string
      *
+     * @ORM\Column(name="common_name", type="string", length=125)
+     */
+    private $commonName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="last_name", type="string", length=125)
      */
     private $lastName;
@@ -49,6 +56,41 @@ class Player
      * @ORM\Column(name="weight", type="integer", length=3)
      */
     private $weight;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="birthdate", type="string", length=10)
+     */
+    private $birthdate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="age", type="string", length=10)
+     */
+    private $age;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="foot", type="string", length=10)
+     */
+    private $foot;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="weak_foot", type="int", length=3)
+     */
+    private $weakFoot;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="is_gk", type="boolean")
+     */
+    private $isGK;
 
     /**
      * @var string
@@ -77,6 +119,34 @@ class Player
      * @ORM\JoinColumn(name="nationality_id", referencedColumnName="id")
      */
     private $nationality;
+
+    /**
+     * One Player has One PlayerATKStats.
+     * @ORM\OneToOne(targetEntity="PlayerATKStats")
+     * @ORM\JoinColumn(name="player_atk_stats_id", referencedColumnName="id")
+     */
+    private $playerATKStats;
+
+    /**
+     * One Player has One PlayerSPEStats.
+     * @ORM\OneToOne(targetEntity="PlayerSPEStats")
+     * @ORM\JoinColumn(name="player_spe_stats_id", referencedColumnName="id")
+     */
+    private $playerSPEStats;
+
+    /**
+     * One Player has One PlayerDEFStats.
+     * @ORM\OneToOne(targetEntity="PlayerDEFStats")
+     * @ORM\JoinColumn(name="player_def_stats_id", referencedColumnName="id")
+     */
+    private $playerDEFStats;
+
+    /**
+     * One Player has One PlayerGKStats.
+     * @ORM\OneToOne(targetEntity="PlayerGKStats")
+     * @ORM\JoinColumn(name="player_gk_stats_id", referencedColumnName="id")
+     */
+    private $playerGKStats;
 
 
     public function __construct()
@@ -189,5 +259,111 @@ class Player
     public function getRealClub()
     {
         return $this->realClub;
+    }
+
+    /**
+     * Set height
+     *
+     * @param integer $height
+     *
+     * @return Player
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * Set weight
+     *
+     * @param integer $weight
+     *
+     * @return Player
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get weight
+     *
+     * @return integer
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Add position
+     *
+     * @param \AppBundle\Entity\PlayerPosition $position
+     *
+     * @return Player
+     */
+    public function addPosition(\AppBundle\Entity\PlayerPosition $position)
+    {
+        $this->positions[] = $position;
+
+        return $this;
+    }
+
+    /**
+     * Remove position
+     *
+     * @param \AppBundle\Entity\PlayerPosition $position
+     */
+    public function removePosition(\AppBundle\Entity\PlayerPosition $position)
+    {
+        $this->positions->removeElement($position);
+    }
+
+    /**
+     * Get positions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPositions()
+    {
+        return $this->positions;
+    }
+
+    /**
+     * Set nationality
+     *
+     * @param \AppBundle\Entity\Nationality $nationality
+     *
+     * @return Player
+     */
+    public function setNationality(\AppBundle\Entity\Nationality $nationality = null)
+    {
+        $this->nationality = $nationality;
+
+        return $this;
+    }
+
+    /**
+     * Get nationality
+     *
+     * @return \AppBundle\Entity\Nationality
+     */
+    public function getNationality()
+    {
+        return $this->nationality;
     }
 }

@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playergkstats list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Diving</th>
+                <th>Handling</th>
+                <th>Kicking</th>
+                <th>Positioning</th>
+                <th>Reflexes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for playerGKStat in playerGKStats %}
+            <tr>
+                <td><a href="{{ path('playergkstats_show', { 'id': playerGKStat.id }) }}">{{ playerGKStat.id }}</a></td>
+                <td>{{ playerGKStat.diving }}</td>
+                <td>{{ playerGKStat.handling }}</td>
+                <td>{{ playerGKStat.kicking }}</td>
+                <td>{{ playerGKStat.positioning }}</td>
+                <td>{{ playerGKStat.reflexes }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('playergkstats_show', { 'id': playerGKStat.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('playergkstats_edit', { 'id': playerGKStat.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playergkstats_new') }}">Create a new playerGKStat</a>
+        </li>
+    </ul>
+{% endblock %}

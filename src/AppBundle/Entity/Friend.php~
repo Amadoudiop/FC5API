@@ -2,16 +2,29 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Friend
  *
  * @ORM\Table(name="friend")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FriendRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Friend
+class Friend extends AbstractEntity
 {
+    public static $defaultFieldOrder = "label";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'label',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'label',
+        'blason',
+    ];
+
     /**
      * @var int
      *
