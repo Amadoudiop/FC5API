@@ -68,13 +68,6 @@ class ClubStatController extends JsonController
      * @ApiDoc(
      *     description="Creates a new clubStat entity",
      *     section="ClubStat",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="label", "dataType"="string", "required"=true, "description"="ClubStat label"},
      *          {"name"="value", "dataType"="string", "required"=true, "description"="ClubStat value"},
@@ -143,13 +136,6 @@ class ClubStatController extends JsonController
      * @ApiDoc(
      *     description="Edit a clubStat",
      *     section="ClubStat",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="label", "dataType"="string", "required"=true, "description"="ClubStat label"},
      *     }

@@ -67,13 +67,6 @@ class EventTypeController extends JsonController
      * @ApiDoc(
      *     description="Creates a new event",
      *     section="EventType",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="label", "dataType"="string", "required"=true, "description"="EventType label"},
      *     }
@@ -139,13 +132,6 @@ class EventTypeController extends JsonController
      * @ApiDoc(
      *     description="Edit a event",
      *     section="EventType",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="EventType name"},
      *     }

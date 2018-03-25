@@ -68,13 +68,6 @@ class JerseyController extends JsonController
      * @ApiDoc(
      *     description="Creates a new jersey",
      *     section="Jersey",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="name", "dataType"="string", "required"=true, "description"="Jersey name"},
      *          {"name"="blason", "dataType"="string", "required"=true, "description"="Jersey blason"},
@@ -142,13 +135,6 @@ class JerseyController extends JsonController
      * @ApiDoc(
      *     description="Edit a jersey",
      *     section="Jersey",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="Jersey name"},
      *     }
