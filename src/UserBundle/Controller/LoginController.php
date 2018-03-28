@@ -9,14 +9,34 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use UserBundle\Entity\User;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  
 class LoginController extends Controller
 {
     use \UserBundle\Helper\ControllerHelper;
  
     /**
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @Route("/login", name="user_login")
      * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Connect a user",
+     *     section="User",
+     *     parameters={
+     *          {"name"="email", "dataType"="string", "required"=true, "description"="User email"},
+     *          {"name"="password", "dataType"="string", "required"=true, "description"="User password"},
+     *     },
+     *    statusCodes={
+     *         200="Returned when connected with a token",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
      */
     public function loginAction(Request $request)
     {
@@ -28,14 +48,14 @@ class LoginController extends Controller
             ->findOneBy(['email' => $email]);
  
         if (!$user) {
-            throw $this->createNotFoundException();
+            return new Response(Response::HTTP_BAD_REQUEST);
         }
  
         $isValid = $this->get('security.password_encoder')
             ->isPasswordValid($user, $password);
  
         if (!$isValid) {
-            throw new BadCredentialsException();
+            return new Response(Response::HTTP_BAD_REQUEST);
         }
  
         //$response = new Response(Response::HTTP_OK);
