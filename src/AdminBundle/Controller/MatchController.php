@@ -66,13 +66,6 @@ class MatchController extends JsonController
      * @ApiDoc(
      *     description="Creates a new match",
      *     section="Match",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="name", "dataType"="string", "required"=true, "description"="Match name"},
      *          {"name"="blason", "dataType"="string", "required"=true, "description"="Match blason"},
@@ -139,13 +132,6 @@ class MatchController extends JsonController
      * @ApiDoc(
      *     description="Edit a match",
      *     section="Match",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="Match name"},
      *     }

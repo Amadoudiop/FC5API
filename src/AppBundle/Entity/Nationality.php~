@@ -31,7 +31,7 @@ class Nationality
     /**
      * @var string
      *
-     * @ORM\Column(name="short_label", type="string", length=5)
+     * @ORM\Column(name="short_label", type="string", length=125)
      */
     private $shortLabel;
 
@@ -134,5 +134,39 @@ class Nationality
     public function getFlag()
     {
         return $this->flag;
+    }
+
+    /**
+     * Add player
+     *
+     * @param \AppBundle\Entity\Player $player
+     *
+     * @return Nationality
+     */
+    public function addPlayer(\AppBundle\Entity\Player $player)
+    {
+        $this->players[] = $player;
+
+        return $this;
+    }
+
+    /**
+     * Remove player
+     *
+     * @param \AppBundle\Entity\Player $player
+     */
+    public function removePlayer(\AppBundle\Entity\Player $player)
+    {
+        $this->players->removeElement($player);
+    }
+
+    /**
+     * Get players
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPlayers()
+    {
+        return $this->players;
     }
 }

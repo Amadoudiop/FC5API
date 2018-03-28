@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playeratkstat</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ playerATKStat.id }}</td>
+            </tr>
+            <tr>
+                <th>Ball_control</th>
+                <td>{{ playerATKStat.ballcontrol }}</td>
+            </tr>
+            <tr>
+                <th>Crossing</th>
+                <td>{{ playerATKStat.crossing }}</td>
+            </tr>
+            <tr>
+                <th>Curve</th>
+                <td>{{ playerATKStat.curve }}</td>
+            </tr>
+            <tr>
+                <th>Dribbling</th>
+                <td>{{ playerATKStat.dribbling }}</td>
+            </tr>
+            <tr>
+                <th>Finishing</th>
+                <td>{{ playerATKStat.finishing }}</td>
+            </tr>
+            <tr>
+                <th>Volleys</th>
+                <td>{{ playerATKStat.volleys }}</td>
+            </tr>
+            <tr>
+                <th>Shotpower</th>
+                <td>{{ playerATKStat.shotpower }}</td>
+            </tr>
+            <tr>
+                <th>Longshots</th>
+                <td>{{ playerATKStat.longshots }}</td>
+            </tr>
+            <tr>
+                <th>Penalties</th>
+                <td>{{ playerATKStat.penalties }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playeratkstats_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('playeratkstats_edit', { 'id': playerATKStat.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

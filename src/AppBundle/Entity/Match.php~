@@ -2,16 +2,30 @@
 
 namespace AppBundle\Entity;
 
+use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Match
  *
  * @ORM\Table(name="match")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MatchRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Match
+class Match extends AbstractEntity
 {
+    public static $defaultFieldOrder = "id";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'result',
+        'winner',
+        'loser',
+        'date',
+    ];
+
     /**
      * @var int
      *

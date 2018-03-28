@@ -24,6 +24,19 @@ services:
           - '@fc5.json_controller'
           - '@request_stack'
 
+    fc5.ultimateTeamApi:
+        class: AdminBundle\Service\UltimateTeamApi
+        arguments:
+            - '@service_container'
+            - '@doctrine'
+
     fc5.loadDataFixture:
         class: AdminBundle\DataFixtures\ClubFixtures
         tags: [doctrine.fixture.orm]
+
+    fc5.loadPlayerFixture:
+        class: AdminBundle\DataFixtures\PlayerFixtures
+        tags: [doctrine.fixture.orm]
+        arguments:
+            - '%kernel.root_dir%'
+            - '@fc5.ultimateTeamApi'

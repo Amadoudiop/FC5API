@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Playerdefstat</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ playerDEFStat.id }}</td>
+            </tr>
+            <tr>
+                <th>Heading_accuracy</th>
+                <td>{{ playerDEFStat.headingaccuracy }}</td>
+            </tr>
+            <tr>
+                <th>Interceptions</th>
+                <td>{{ playerDEFStat.interceptions }}</td>
+            </tr>
+            <tr>
+                <th>Jumping</th>
+                <td>{{ playerDEFStat.jumping }}</td>
+            </tr>
+            <tr>
+                <th>Marking</th>
+                <td>{{ playerDEFStat.marking }}</td>
+            </tr>
+            <tr>
+                <th>Reactions</th>
+                <td>{{ playerDEFStat.reactions }}</td>
+            </tr>
+            <tr>
+                <th>Sliding_tackle</th>
+                <td>{{ playerDEFStat.slidingtackle }}</td>
+            </tr>
+            <tr>
+                <th>Standing_tackle</th>
+                <td>{{ playerDEFStat.standingtackle }}</td>
+            </tr>
+            <tr>
+                <th>Strength</th>
+                <td>{{ playerDEFStat.strength }}</td>
+            </tr>
+            <tr>
+                <th>Stamina</th>
+                <td>{{ playerDEFStat.stamina }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('playerdefstats_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('playerdefstats_edit', { 'id': playerDEFStat.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -68,13 +68,6 @@ class FriendController extends JsonController
      * @ApiDoc(
      *     description="Creates a new friend",
      *     section="Friend",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="name", "dataType"="string", "required"=true, "description"="Friend name"},
      *          {"name"="blason", "dataType"="string", "required"=true, "description"="Friend blason"},
@@ -142,13 +135,6 @@ class FriendController extends JsonController
      * @ApiDoc(
      *     description="Edit a friend",
      *     section="Friend",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="Friend name"},
      *     }
