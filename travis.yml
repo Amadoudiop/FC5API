@@ -1,10 +1,10 @@
 language: php
 php:
   - 7.1.15
-install:
-   - composer install
-   - php bin/console doctrine:database:create
-   - php bin/console d:s:u -f
-   - php bin/console doctrine:fixtures:load --append
-notifications:
-  slack:
+#install:
+#   - composer install
+#   - php bin/console doctrine:database:create
+#   - php bin/console d:s:u -f
+#   - php bin/console doctrine:fixtures:load --append
+#notifications:
+#  slack:
