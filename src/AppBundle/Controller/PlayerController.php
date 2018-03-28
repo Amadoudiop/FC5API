@@ -63,7 +63,6 @@ class PlayerController extends JsonController
                         'composure',
                         'potential',
                         'rating',
-                        'playerATKStats',
                     ]
                 )
                 ->getResults()
@@ -91,7 +90,7 @@ class PlayerController extends JsonController
     {
         $repository = $this->getDoctrine()->getRepository('AppBundle:Player');
         $player = $repository->findOneById($request->get('id'));
-//        dump($player->serializeEntity());die;
+        dump($player->serializeEntity());die;
         if (empty($player)) {
             return new ApiResponse(null, 404, ['Player not found']);
         } else {
