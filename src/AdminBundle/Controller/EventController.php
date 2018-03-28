@@ -68,13 +68,6 @@ class EventController extends JsonController
      * @ApiDoc(
      *     description="Creates a new event",
      *     section="Event",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="label", "dataType"="string", "required"=true, "description"="Event label"},
      *          {"name"="date", "dataType"="dateTime", "required"=true, "description"="Event date"},
@@ -141,13 +134,6 @@ class EventController extends JsonController
      * @ApiDoc(
      *     description="Edit a event",
      *     section="Event",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="label", "dataType"="string", "required"=true, "description"="Event label"},
      *     }

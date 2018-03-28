@@ -1,3 +1,10 @@
+user:
+    resource: "@UserBundle/Controller/"
+    type:     annotation
+    prefix:   /api/users
+    defaults:
+        _format: json
+
 app_player_gk_stats:
     resource: "@AppBundle/Controller/PlayerGKStatsController.php"
     type:     annotation
@@ -99,10 +106,9 @@ app:
     resource: '@AppBundle/Controller/'
     type: annotation
 
-auth-tokens:
-    type:     rest
-    resource: AppBundle\Controller\AuthTokenController
-
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/doc
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

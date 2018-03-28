@@ -68,13 +68,6 @@ class LeagueController extends JsonController
      * @ApiDoc(
      *     description="Creates a new league",
      *     section="League",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="name", "dataType"="string", "required"=true, "description"="League name"},
      *          {"name"="level", "dataType"="string", "required"=true, "description"="League level"},
@@ -141,13 +134,6 @@ class LeagueController extends JsonController
      * @ApiDoc(
      *     description="Edit a league",
      *     section="League",
-     *     headers={
-     *          {
-     *              "name"="X-Auth-Token",
-     *              "description"="Auth Token",
-     *              "required"=true
-     *          }
-     *     },
      *     parameters={
      *          {"name"="Name", "dataType"="string", "required"=true, "description"="League name"},
      *     }
