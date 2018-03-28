@@ -38,8 +38,40 @@ class LoginController extends Controller
             throw new BadCredentialsException();
         }
  
-        $response = new Response(Response::HTTP_OK);
+        //$response = new Response(Response::HTTP_OK);
+        $token = $this->getToken($user);
+        $response = new Response($this->serialize(['token' => $token]), Response::HTTP_OK);
  
         return $this->setBaseHeaders($response);
+    }
+
+    /**
+     * Returns token for user.
+     *
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getToken(User $user)
+    {
+        return $this->container->get('lexik_jwt_authentication.encoder')
+                ->encode([
+                    'username' => $user->getUsername(),
+                    'exp' => $this->getTokenExpiryDateTime(),
+                ]);
+    }
+     
+    /**
+     * Returns token expiration datetime.
+     *
+     * @return string Unixtmestamp
+     */
+    private function getTokenExpiryDateTime()
+    {
+        $tokenTtl = $this->container->getParameter('lexik_jwt_authentication.token_ttl');
+        $now = new \DateTime();
+        $now->add(new \DateInterval('PT'.$tokenTtl.'S'));
+     
+        return $now->format('U');
     }
 }
