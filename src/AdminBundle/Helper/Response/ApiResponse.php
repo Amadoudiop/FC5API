@@ -22,7 +22,5 @@ class ApiResponse extends Response
         $response->errors = $errors;
         $headers = array_merge($headers, ['Content-Type' => 'application/json']);
         parent::__construct(json_encode($response), $status, $headers);
-//        dump($response);die;
-//        dump(json_encode($response,JSON_FORCE_OBJECT));die;
     }
 }

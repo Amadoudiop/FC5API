@@ -34,6 +34,8 @@ class Player extends AbstractEntity
         'potential',
         'rating',
         'playerATKStats',
+        'playerSPEStats',
+        'playerDEFStats',
     ];
     public static $fieldsApi = [
         'id',
@@ -53,6 +55,8 @@ class Player extends AbstractEntity
         'potential',
         'rating',
         'playerATKStats',
+        'playerSPEStats',
+        'playerDEFStats',
     ];
 
     /**
