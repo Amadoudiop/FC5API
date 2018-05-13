@@ -100,7 +100,7 @@ app_club_stat:
 admin:
     resource: "@AdminBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /admin/
 
 app:
     resource: '@AppBundle/Controller/'
