@@ -80,7 +80,7 @@ class PlayerController extends JsonController
      * @ApiDoc(
      *     description="get player",
      *     section="Player"
-     * )
+     * )serializeEntity
      *
      * @Route("/{id}", name="getPlayer")
      * @Method("GET")
@@ -90,7 +90,6 @@ class PlayerController extends JsonController
     {
         $repository = $this->getDoctrine()->getRepository('AppBundle:Player');
         $player = $repository->findOneById($request->get('id'));
-        dump($player->serializeEntity());die;
         if (empty($player)) {
             return new ApiResponse(null, 404, ['Player not found']);
         } else {
