@@ -20,7 +20,20 @@ class ApiResponse extends Response
         $response         = new \stdClass();
         $response->result = $content;
         $response->errors = $errors;
+
+
+//        dump(        array_map([$this,'tooArray'], $content));die;
         $headers = array_merge($headers, ['Content-Type' => 'application/json']);
+
         parent::__construct(json_encode($response), $status, $headers);
+    }
+
+    public function tooArray($content)
+    {
+//        dump('yo',$content);die;
+        if(is_object($content)){
+            $content = (array) $content;
+        }
+        return $content;
     }
 }
