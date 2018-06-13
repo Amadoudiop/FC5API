@@ -6,10 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use UserBundle\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AdminBundle\Helper\Response\ApiResponse;
 
 class LoginController extends Controller
 {
@@ -48,21 +48,19 @@ class LoginController extends Controller
             ->findOneBy(['email' => $email]);
 
         if (!$user) {
-            return new Response(Response::HTTP_BAD_REQUEST);
+            return new ApiResponse(null, 400, ['Your login or password is incorrect']);
         }
 
         $isValid = $this->get('security.password_encoder')
             ->isPasswordValid($user, $password);
 
         if (!$isValid) {
-            return new Response(Response::HTTP_BAD_REQUEST);
+            return new ApiResponse(null, 400, ['Your login or password is incorrect']);
         }
 
-        //$response = new Response(Response::HTTP_OK);
         $token = $this->getToken($user);
-        $response = new Response($this->serialize(['token' => $token]), Response::HTTP_OK);
 
-        return $this->setBaseHeaders($response);
+        return new ApiResponse($this->serialize(['token' => $token]));
     }
 
     /**
