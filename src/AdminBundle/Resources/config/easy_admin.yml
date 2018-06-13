@@ -1,0 +1,18 @@
+easy_admin:
+    site_name: 'FC5 admin'
+    design:
+        brand_color: '#1ABC9C'
+        color_scheme: 'light'
+        assets:
+            favicon: '/assets/backend/favicon.png'
+    show:
+        max_results: 20
+    entities:
+        Player:
+            class: AppBundle\Entity\Player
+            label: 'Players'
+            list:
+                title: "Most recent players"
+                fields: ['id', 'commonName', 'lastName', 'age', 'firstName']
+            search:
+                fields: ['id', 'commonName', 'lastName', 'age', 'firstName']

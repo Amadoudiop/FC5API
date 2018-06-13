@@ -3,15 +3,27 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AdminBundle\Entity\AbstractEntity;
 
 /**
  * PlayerATKStats
  *
  * @ORM\Table(name="player_a_t_k_stats")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerATKStatsRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class PlayerATKStats
+class PlayerATKStats extends AbstractEntity
 {
+    public static $fieldsApi = [
+        'ballControl',
+        'crossing',
+        'curve',
+        'dribbling',
+        'finishing',
+        'shotpower',
+        'longShot',
+        'penalties'
+    ];
+
     /**
      * @var int
      *
@@ -26,7 +38,7 @@ class PlayerATKStats
      *
      * @ORM\Column(name="ball_control", type="integer", length=3)
      */
-    private $ball_control;
+    private $ballControl;
 
     /**
      * @var int
@@ -73,9 +85,9 @@ class PlayerATKStats
     /**
      * @var int
      *
-     * @ORM\Column(name="longshots", type="integer", length=3)
+     * @ORM\Column(name="long_shot", type="integer", length=3)
      */
-    private $longshots;
+    private $longShot;
 
     /**
      * @var int
@@ -104,7 +116,7 @@ class PlayerATKStats
      */
     public function setBallControl($ballControl)
     {
-        $this->ball_control = $ballControl;
+        $this->ballControl = $ballControl;
 
         return $this;
     }
@@ -116,7 +128,7 @@ class PlayerATKStats
      */
     public function getBallControl()
     {
-        return $this->ball_control;
+        return $this->ballControl;
     }
 
     /**
@@ -264,27 +276,27 @@ class PlayerATKStats
     }
 
     /**
-     * Set longshots
+     * Set longShot
      *
-     * @param integer $longshots
+     * @param integer $longShot
      *
      * @return PlayerATKStats
      */
-    public function setLongshots($longshots)
+    public function setLongShot($longShot)
     {
-        $this->longshots = $longshots;
+        $this->longShot = $longShot;
 
         return $this;
     }
 
     /**
-     * Get longshots
+     * Get longShot
      *
      * @return integer
      */
-    public function getLongshots()
+    public function getLongShot()
     {
-        return $this->longshots;
+        return $this->longShot;
     }
 
     /**

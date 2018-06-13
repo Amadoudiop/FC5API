@@ -4,6 +4,7 @@ user:
     prefix:   /api/users
     defaults:
         _format: json
+    methods:  [GET, POST, OPTIONS]
 
 app_player_gk_stats:
     resource: "@AppBundle/Controller/PlayerGKStatsController.php"
@@ -97,10 +98,15 @@ app_club_stat:
 #    resource: "@AdminBundle/Controller/ClubController.php"
 #    type:     annotation
 
-admin:
-    resource: "@AdminBundle/Controller/"
-    type:     annotation
-    prefix:   /admin/
+#admin:
+#    resource: "@AdminBundle/Controller/"
+#    type:     annotation
+#    prefix:   /admin/
+
+#easy_admin_bundle:
+#    resource: "@EasyAdminBundle/Controller/AdminController.php"
+#    type:     annotation
+#    prefix:   /admin
 
 app:
     resource: '@AppBundle/Controller/'
