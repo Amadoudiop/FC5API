@@ -32,10 +32,7 @@ class Player extends AbstractEntity
         'realClub',
         'composure',
         'potential',
-        'rating',
-        'playerATKStats',
-        'playerSPEStats',
-        'playerDEFStats',
+        'rating'
     ];
     public static $fieldsApi = [
         'id',
@@ -57,6 +54,7 @@ class Player extends AbstractEntity
         'playerATKStats',
         'playerSPEStats',
         'playerDEFStats',
+        'playerGKStats'
     ];
 
     /**
@@ -220,7 +218,6 @@ class Player extends AbstractEntity
     {
         $this->positions = new ArrayCollection();
     }
-
 
 
     /**

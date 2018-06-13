@@ -27,4 +27,10 @@ After that, configure your pass phrase in `parameters.yml` :
 jwt_key_pass_phrase:  ''   # ssh key pass phrase
 ```
 
+# Easy AdminBundle
 
+Prepare the Web Assets of the Bundle
+
+```
+php bin/console assets:install --symlink
+```

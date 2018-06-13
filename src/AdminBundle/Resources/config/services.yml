@@ -40,3 +40,6 @@ services:
         arguments:
             - '%kernel.root_dir%'
             - '@fc5.ultimateTeamApi'
+
+    fc5.SimpleStats:
+        class: AdminBundle\Service\SimpleStats

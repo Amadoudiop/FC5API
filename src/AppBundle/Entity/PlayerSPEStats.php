@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AdminBundle\Entity\AbstractEntity;
 
 /**
  * PlayerSPEStats
@@ -10,8 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="player_s_p_e_stats")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerSPEStatsRepository")
  */
-class PlayerSPEStats
+class PlayerSPEStats extends AbstractEntity
 {
+    public static $fieldsApi = [
+        'acceleration',
+        'agility',
+        'balance',
+        'freeKickAccuracy',
+        'shortPassing',
+        'longPassing',
+        'positioning',
+        'vision'
+    ];
+
     /**
      * @var int
      *
@@ -52,30 +64,30 @@ class PlayerSPEStats
     /**
      * @var int
      *
-     * @ORM\Column(name="freekick_accuracy", type="integer", length=3)
+     * @ORM\Column(name="free_kick_accuracy", type="integer", length=3)
      */
-    private $freekick_accuracy;
+    private $freeKickAccuracy;
 
     /**
      * @var int
      *
      * @ORM\Column(name="short_passing", type="integer", length=3)
      */
-    private $short_passing;
+    private $shortPassing;
 
     /**
      * @var int
      *
      * @ORM\Column(name="sprint_speed", type="integer", length=3)
      */
-    private $sprint_speed;
+    private $sprintSpeed;
 
     /**
      * @var int
      *
      * @ORM\Column(name="long_passing", type="integer", length=3)
      */
-    private $long_passing;
+    private $longPassing;
 
     /**
      * @var int
@@ -199,27 +211,27 @@ class PlayerSPEStats
     }
 
     /**
-     * Set freekickAccuracy
+     * Set freeKickAccuracy
      *
-     * @param integer $freekickAccuracy
+     * @param integer $freeKickAccuracy
      *
      * @return PlayerSPEStats
      */
-    public function setFreekickAccuracy($freekickAccuracy)
+    public function setFreeKickAccuracy($freeKickAccuracy)
     {
-        $this->freekick_accuracy = $freekickAccuracy;
+        $this->freeKickAccuracy = $freeKickAccuracy;
 
         return $this;
     }
 
     /**
-     * Get freekickAccuracy
+     * Get freeKickAccuracy
      *
      * @return integer
      */
-    public function getFreekickAccuracy()
+    public function getFreeKickAccuracy()
     {
-        return $this->freekick_accuracy;
+        return $this->freeKickAccuracy;
     }
 
     /**
@@ -231,7 +243,7 @@ class PlayerSPEStats
      */
     public function setShortPassing($shortPassing)
     {
-        $this->short_passing = $shortPassing;
+        $this->shortPassing = $shortPassing;
 
         return $this;
     }
@@ -243,7 +255,7 @@ class PlayerSPEStats
      */
     public function getShortPassing()
     {
-        return $this->short_passing;
+        return $this->shortPassing;
     }
 
     /**
@@ -255,7 +267,7 @@ class PlayerSPEStats
      */
     public function setSprintSpeed($sprintSpeed)
     {
-        $this->sprint_speed = $sprintSpeed;
+        $this->sprintSpeed = $sprintSpeed;
 
         return $this;
     }
@@ -267,7 +279,7 @@ class PlayerSPEStats
      */
     public function getSprintSpeed()
     {
-        return $this->sprint_speed;
+        return $this->sprintSpeed;
     }
 
     /**
@@ -279,7 +291,7 @@ class PlayerSPEStats
      */
     public function setLongPassing($longPassing)
     {
-        $this->long_passing = $longPassing;
+        $this->longPassing = $longPassing;
 
         return $this;
     }
@@ -291,7 +303,7 @@ class PlayerSPEStats
      */
     public function getLongPassing()
     {
-        return $this->long_passing;
+        return $this->longPassing;
     }
 
     /**

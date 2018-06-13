@@ -3,15 +3,28 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AdminBundle\Entity\AbstractEntity;
 
 /**
  * PlayerDEFStats
  *
  * @ORM\Table(name="player_d_e_f_stats")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerDEFStatsRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class PlayerDEFStats
+class PlayerDEFStats extends AbstractEntity
 {
+    public static $fieldsApi = [
+        'headingAccuracy',
+        'interceptions',
+        'jumping',
+        'marking',
+        'reactions',
+        'slidingTackle',
+        'standingTackle',
+        'strength',
+        'stamina'
+    ];
+
     /**
      * @var int
      *
@@ -26,7 +39,7 @@ class PlayerDEFStats
      *
      * @ORM\Column(name="heading_accuracy", type="integer", length=3)
      */
-    private $heading_accuracy;
+    private $headingAccuracy;
 
     /**
      * @var int
@@ -61,14 +74,14 @@ class PlayerDEFStats
      *
      * @ORM\Column(name="sliding_tackle", type="integer", length=3)
      */
-    private $sliding_tackle;
+    private $slidingTackle;
 
     /**
      * @var int
      *
      * @ORM\Column(name="standing_tackle", type="integer", length=3)
      */
-    private $standing_tackle;
+    private $standingTackle;
 
     /**
      * @var int
@@ -104,7 +117,7 @@ class PlayerDEFStats
      */
     public function setHeadingAccuracy($headingAccuracy)
     {
-        $this->heading_accuracy = $headingAccuracy;
+        $this->headingAccuracy = $headingAccuracy;
 
         return $this;
     }
@@ -116,7 +129,7 @@ class PlayerDEFStats
      */
     public function getHeadingAccuracy()
     {
-        return $this->heading_accuracy;
+        return $this->headingAccuracy;
     }
 
     /**
@@ -224,7 +237,7 @@ class PlayerDEFStats
      */
     public function setSlidingTackle($slidingTackle)
     {
-        $this->sliding_tackle = $slidingTackle;
+        $this->slidingTackle = $slidingTackle;
 
         return $this;
     }
@@ -236,7 +249,7 @@ class PlayerDEFStats
      */
     public function getSlidingTackle()
     {
-        return $this->sliding_tackle;
+        return $this->slidingTackle;
     }
 
     /**
@@ -248,7 +261,7 @@ class PlayerDEFStats
      */
     public function setStandingTackle($standingTackle)
     {
-        $this->standing_tackle = $standingTackle;
+        $this->standingTackle = $standingTackle;
 
         return $this;
     }
@@ -260,7 +273,7 @@ class PlayerDEFStats
      */
     public function getStandingTackle()
     {
-        return $this->standing_tackle;
+        return $this->standingTackle;
     }
 
     /**

@@ -99,14 +99,37 @@ class PlayerController extends JsonController
         }
     }
 
+    /**
+     * Get a player by id
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get player",
+     *     section="Player"
+     * )serializeEntity
+     *
+     * @Route("/{id}/simplestats", name="getPlayerSimpleStats")
+     * @Method("GET")
+     *
+     */
+    public function getSimpleStatAction(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Player');
+        $player = $repository->findOneById($request->get('id'));
 
-
-
-
-
-
-
-
+        if (empty($player)) {
+            return new ApiResponse(null, 404, ['Player not found']);
+        } else {
+            $simpleStats = $this->container->get('fc5.SimpleStats')->simpleStats($player);
+//            dump($simpleStats);die;
+            return new ApiResponse(
+//                $player->serializeEntity()
+                $simpleStats
+            );
+        }
+    }
 
     /**
      * Creates a new player entity.
