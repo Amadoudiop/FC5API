@@ -43,6 +43,13 @@ class Jersey extends AbstractEntity
     private $img;
 
     /**
+     * Many Jersey have One Club.
+     * @ORM\ManyToOne(targetEntity="Club", inversedBy="jerseys")
+     * @ORM\JoinColumn(name="club_id", referencedColumnName="id")
+     */
+    private $club;
+
+    /**
      * Many Jersey have One JerseyType.
      * @ORM\ManyToOne(targetEntity="JerseyType", inversedBy="jerseys")
      * @ORM\JoinColumn(name="jersey_type_id", referencedColumnName="id")
@@ -105,5 +112,29 @@ class Jersey extends AbstractEntity
     public function getJerseyType()
     {
         return $this->jerseyType;
+    }
+
+    /**
+     * Set club.
+     *
+     * @param \AppBundle\Entity\Club|null $club
+     *
+     * @return Jersey
+     */
+    public function setClub(\AppBundle\Entity\Club $club = null)
+    {
+        $this->club = $club;
+
+        return $this;
+    }
+
+    /**
+     * Get club.
+     *
+     * @return \AppBundle\Entity\Club|null
+     */
+    public function getClub()
+    {
+        return $this->club;
     }
 }

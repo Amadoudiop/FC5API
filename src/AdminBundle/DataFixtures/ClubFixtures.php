@@ -16,10 +16,10 @@ class ClubFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $club = new Club();
-        $club->setName('Arsenal');
-        $club->setBlason("https://www.arsenal.com/themes/custom/arsenal_main/logo.svg");
-        $manager->persist($club);
-        $manager->flush();
+//        $club = new Club();
+//        $club->setName('Arsenal');
+//        $club->setBlazon("https://www.arsenal.com/themes/custom/arsenal_main/logo.svg");
+//        $manager->persist($club);
+//        $manager->flush();
     }
 }
