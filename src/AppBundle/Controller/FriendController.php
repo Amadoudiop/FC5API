@@ -6,55 +6,83 @@ use AppBundle\Entity\Friend;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use AdminBundle\Helper\Response\ApiResponse;
 
 /**
  * Friend controller.
  *
- * @Route("friend")
+ * @Route("api/friend")
+ *
+ * @Security("is_granted('ROLE_USER')")
  */
 class FriendController extends Controller
 {
     /**
-     * Lists all friend entities.
+     * Add a new friend
      *
-     * @Route("/", name="friend_index")
-     * @Method("GET")
+     * @Route("/add", name="friend_add")
+     * @Method("POST")
      */
-    public function indexAction()
+    public function addAction(Request $request)
     {
+        $user = $this->getUser();
+        $friend_id = $request->request->get('friend_id');
+
+        $friend = $this->getDoctrine()
+            ->getRepository('UserBundle:User')
+            ->findOneBy(['id' => $friend_id]);
+
+        if (!$friend) {
+            return new ApiResponse(null, 404, ['User not found']);
+        }
+
+        $friend_test = $this->getDoctrine()
+            ->getRepository('AppBundle:Friend')
+            ->findOneBy(['from' => $user, 'to' => $friend]);
+
+        if ($friend == $user) {
+            return new ApiResponse(null, 400, ['You are you !!!']);
+        }
+
+        if ($friend_test) {
+            return new ApiResponse(null, 400, ['You are already friends']);
+        }
+
+        $friends = new Friend();
+        $friends->setFrom($user);
+        $friends->setTo($friend);
+        $friends->setApproved(true);
+
         $em = $this->getDoctrine()->getManager();
+        $em->persist($friends);
+        $em->flush();
 
-        $friends = $em->getRepository('AppBundle:Friend')->findAll();
-
-        return $this->render('friend/index.html.twig', array(
-            'friends' => $friends,
-        ));
+        return new ApiResponse('Your request has been sent');
     }
 
     /**
-     * Creates a new friend entity.
+     * Remove a friend
      *
-     * @Route("/new", name="friend_new")
-     * @Method({"GET", "POST"})
+     * @Route("/list", name="friend_list")
+     * @Method("GET")
      */
-    public function newAction(Request $request)
+    public function listAction(Request $request)
     {
-        $friend = new Friend();
-        $form = $this->createForm('AppBundle\Form\FriendType', $friend);
-        $form->handleRequest($request);
+        $user = $this->getUser();
+        //var_dump($user);die;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($friend);
-            $em->flush();
-
-            return $this->redirectToRoute('friend_show', array('id' => $friend->getId()));
+        if (!$user) {
+            return new ApiResponse(null, 404, ['User not found']);
         }
 
-        return $this->render('friend/new.html.twig', array(
-            'friend' => $friend,
-            'form' => $form->createView(),
-        ));
+        $friends = $this->getDoctrine()
+            ->getRepository('AppBundle:Friend')
+            ->findBy(['from' => $user, 'approved' => true]);
+
+        //var_dump($friends);die;
+
+        return new ApiResponse($friends);
     }
 
     /**
