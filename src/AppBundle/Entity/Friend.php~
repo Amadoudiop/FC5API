@@ -13,18 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Friend extends AbstractEntity
 {
-    public static $defaultFieldOrder = "label";
-    public static $defaultDirOrder = "asc";
-    public static $fieldsOrder = [
-        'id',
-        'label',
-    ];
-    public static $fieldsApi = [
-        'id',
-        'label',
-        'blason',
-    ];
-
     /**
      * @var int
      *
@@ -35,25 +23,23 @@ class Friend extends AbstractEntity
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="label", type="string", length=125)
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $label;
+    private $from;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $to;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="short_label", type="string", length=5)
+     * @ORM\Column(name="approved", type="boolean")
      */
-    private $shortLabel;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="flag", type="string", length=255)
-     */
-    private $flag;
+    private $approved;
 
 
     /**
