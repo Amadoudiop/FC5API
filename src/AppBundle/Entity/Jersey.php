@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Jersey extends AbstractEntity
 {
-
     public static $defaultFieldOrder = "id";
     public static $defaultDirOrder = "asc";
     public static $fieldsOrder = [

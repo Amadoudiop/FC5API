@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\BlazonShape;
+use AppBundle\Entity\StoreItem;
 use Symfony\Component\HttpFoundation\Request;
 use AdminBundle\Helper\Response\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,25 +12,25 @@ use AdminBundle\Controller\JsonController;
 use Exception;
 
 /**
- * BlazonShape controller.
+ * StoreItem controller.
  *
- * @Route("api/bazonshape")
+ * @Route("api/storeitem")
  */
-class BlazonShapeController extends JsonController
+class StoreItemController extends JsonController
 {
     /**
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @Route("s", name="blazonShapeList")
+     * @Route("s", name="storeItemList")
      * @Method("POST")
      *
      * @return \AdminBundle\Helper\Response\ApiResponse
      *
      * @ApiDoc (
      *
-     *  description="BlazonShapes with orders, pagination and research",
-     *  section="BlazonShape",
+     *  description="StoreItems with orders, pagination and research",
+     *  section="StoreItem",
      *
      *  parameters={
      *      {"name"="orders", "dataType"="array", "required"=false, "format"="[ ['name', 'desc'] ]"},
@@ -45,40 +45,43 @@ class BlazonShapeController extends JsonController
         return new ApiResponse(
             $this->get('fc5.entities_list_handler')
                 ->handleList(
-                    'AppBundle\Entity\BlazonShape',
+                    'AppBundle\Entity\StoreItem',
                     [
                         'id',
-                        'premium',
+                        'title',
+                        'value',
+                        'fc5Buyable'
                     ]
                 )
                 ->getResults()
         );
     }
 
+
     /**
-     * Get a blazonShape by id
+     * Get a storeItem by id
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \AdminBundle\Helper\Response\ApiResponse
      * @ApiDoc(
-     *     description="get blazonShape",
-     *     section="BlazonShape"
+     *     description="get storeItem",
+     *     section="StoreItem"
      * )serializeEntity
      *
-     * @Route("/{id}", name="getBlazonShape")
+     * @Route("/{id}", name="getStoreItem")
      * @Method("GET")
      *
      */
     public function getAction(Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository('AppBundle:BlazonShape');
-        $blazonShape = $repository->findOneById($request->get('id'));
-        if (empty($blazonShape)) {
-            return new ApiResponse(null, 404, ['BlazonShape not found']);
+        $repository = $this->getDoctrine()->getRepository('AppBundle:StoreItem');
+        $storeItem = $repository->findOneById($request->get('id'));
+        if (empty($storeItem)) {
+            return new ApiResponse(null, 404, ['StoreItem not found']);
         } else {
             return new ApiResponse(
-                $blazonShape->serializeEntity()
+                $storeItem->serializeEntity()
             );
         }
     }

@@ -19,12 +19,16 @@ class Club extends AbstractEntity
     public static $fieldsOrder = [
         'id',
         'name',
+        'shortName'
     ];
     public static $fieldsApi = [
         'id',
         'name',
+        'shortName',
+        'owner',
         'blazon',
-        'clubStats',
+        'jerseys',
+        'clubStats'
     ];
 
     /**
