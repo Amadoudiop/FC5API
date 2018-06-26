@@ -28,7 +28,8 @@ class Club extends AbstractEntity
         'owner',
         'blazon',
         'jerseys',
-        'clubStats'
+        'clubStats',
+        'stadium'
     ];
 
     /**
@@ -79,6 +80,12 @@ class Club extends AbstractEntity
      * @ORM\OneToMany(targetEntity="ClubStat", mappedBy="club")
      */
     private $clubStats;
+
+    /**
+     * One Club has One Stadium.
+     * @ORM\OneToOne(targetEntity="Stadium", mappedBy="club")
+     */
+    private $stadium;
 
 
     public function __construct()
@@ -261,5 +268,29 @@ class Club extends AbstractEntity
     public function getJerseys()
     {
         return $this->jerseys;
+    }
+
+    /**
+     * Set stadium.
+     *
+     * @param \AppBundle\Entity\Stadium|null $stadium
+     *
+     * @return Club
+     */
+    public function setStadium(\AppBundle\Entity\Stadium $stadium = null)
+    {
+        $this->stadium = $stadium;
+
+        return $this;
+    }
+
+    /**
+     * Get stadium.
+     *
+     * @return \AppBundle\Entity\Stadium|null
+     */
+    public function getStadium()
+    {
+        return $this->stadium;
     }
 }
