@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AdminBundle\Helper\Response\ApiResponse;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Friend controller.
@@ -18,11 +19,29 @@ use AdminBundle\Helper\Response\ApiResponse;
  */
 class FriendController extends Controller
 {
+
     /**
-     * Add a new friend
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @Route("/add", name="friend_add")
      * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Add a new friend",
+     *     section="Friend",
+     *     parameters={
+     *          {"name"="friend_id", "dataType"="string", "required"=true, "description"="User id"},
+     *     },
+     *    statusCodes={
+     *         201="Returned when added",
+     *         404="Returned when a user is not found",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
      */
     public function addAction(Request $request)
     {
@@ -62,15 +81,30 @@ class FriendController extends Controller
     }
 
     /**
-     * Remove a friend
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @Route("/list", name="friend_list")
      * @Method("GET")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Friends list",
+     *     section="Friend",
+     *     parameters={
+     *     },
+     *    statusCodes={
+     *         201="Returned when listed",
+     *         404="Returned when a user is not found",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
      */
     public function listAction(Request $request)
     {
         $user = $this->getUser();
-        //var_dump($user);die;
 
         if (!$user) {
             return new ApiResponse(null, 404, ['User not found']);
@@ -80,9 +114,19 @@ class FriendController extends Controller
             ->getRepository('AppBundle:Friend')
             ->findBy(['from' => $user, 'approved' => true]);
 
-        //var_dump($friends);die;
+        $data = [];
 
-        return new ApiResponse($friends);
+        foreach ($friends as $friend) {
+            $username = (empty($friend->getTo()->getUsername())) ? '' : $friend->getTo()->getUsername();
+            $id = (empty($friend->getTo()->getId())) ? '' : $friend->getTo()->getId();
+
+            $data[] = [
+                'username' => $username,
+                'id' => $id
+            ];
+        }
+
+        return new ApiResponse($data);
     }
 
     /**
