@@ -6,6 +6,10 @@ user:
         _format: json
     methods:  [GET, POST, OPTIONS]
 
+app_user:
+    resource: "@UserBundle/Controller/DefaultController.php"
+    type:     annotation
+
 app_player_gk_stats:
     resource: "@AppBundle/Controller/PlayerGKStatsController.php"
     type:     annotation
