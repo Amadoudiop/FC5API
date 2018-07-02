@@ -9,6 +9,7 @@ use AdminBundle\Helper\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use AdminBundle\Controller\JsonController;
 
 /**
  * User controller.
@@ -18,17 +19,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  * @Security("is_granted('ROLE_USER')")
  */
 
-class DefaultController extends Controller
+class DefaultController extends JsonController
 {
-//    /**
-//     * @Route("/")
-//     */
-//    public function indexAction()
-//    {
-//        return $this->render('UserBundle:Default:index.html.twig');
-//    }
-
-
     /**
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
