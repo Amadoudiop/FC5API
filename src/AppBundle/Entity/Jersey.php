@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Jersey extends AbstractEntity
 {
-
     public static $defaultFieldOrder = "id";
     public static $defaultDirOrder = "asc";
     public static $fieldsOrder = [
@@ -41,6 +40,13 @@ class Jersey extends AbstractEntity
      * @ORM\Column(name="img", type="string", length=255)
      */
     private $img;
+
+    /**
+     * Many Jersey have One Club.
+     * @ORM\ManyToOne(targetEntity="Club", inversedBy="jerseys")
+     * @ORM\JoinColumn(name="club_id", referencedColumnName="id")
+     */
+    private $club;
 
     /**
      * Many Jersey have One JerseyType.
@@ -105,5 +111,29 @@ class Jersey extends AbstractEntity
     public function getJerseyType()
     {
         return $this->jerseyType;
+    }
+
+    /**
+     * Set club.
+     *
+     * @param \AppBundle\Entity\Club|null $club
+     *
+     * @return Jersey
+     */
+    public function setClub(\AppBundle\Entity\Club $club = null)
+    {
+        $this->club = $club;
+
+        return $this;
+    }
+
+    /**
+     * Get club.
+     *
+     * @return \AppBundle\Entity\Club|null
+     */
+    public function getClub()
+    {
+        return $this->club;
     }
 }
