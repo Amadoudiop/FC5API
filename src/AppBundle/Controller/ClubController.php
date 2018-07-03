@@ -3,12 +3,16 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Club;
+use AppBundle\Entity\Stadium;
 use AppBundle\Form\ClubFormType;
 use Symfony\Component\HttpFoundation\Request;
 use AdminBundle\Helper\Response\ApiResponse;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Controller\JsonController;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 /**
  * Club controller.
@@ -118,9 +122,9 @@ class ClubController extends JsonController
      *          {"name"="shortName", "dataType"="string", "required"=true, "description"="Short name"},
      *          {"name"="owner", "dataType"="string", "required"=true, "description"="Owner"},
      *          {"name"="blazon", "dataType"="string", "required"=true, "description"="Blazon"},
-     *          {"name"="jerseys", "dataType"="objects", "required"=true, "description"="Multiple Jersey"},
-     *          {"name"="clubStats", "dataType="objects", "required"=true, "description"="The club stats"},
-     *          {"name"="stadium", "dataType"="object", "required"=true, "description"="Stadium"},
+     *          {"name"="jerseys", "dataType"="array()", "required"=true, "description"="Multiple Jersey"},
+     *          {"name"="clubStats", "dataType"="array()", "required"=true, "description"="The club Stats"},
+     *          {"name"="stadium", "dataType"="integer", "required"=true, "description"="Stadium"},
      *     }
      * )
      */
@@ -131,6 +135,16 @@ class ClubController extends JsonController
 
         $club = new Club();
         $form = $this->createForm(ClubFormType::class, $club);
+//        dump($json);
+
+//        $stadium = new Stadium();
+//        $stadium->setCostPerGame($json['stadium']['costPerGame']);
+//        $stadium->setCurrentCapacity($json['stadium']['currentCapacity']);
+//        $stadium->setMaximumCapacity($json['stadium']['maximumCapacity']);
+//        $stadium->setName($json['stadium']['name']);
+//        $json['stadium'] = $stadium;
+
+//        dump($json);die;
         $form->submit($json);
 
         if (!$form->isValid()) {
@@ -172,8 +186,8 @@ class ClubController extends JsonController
      *          {"name"="shortName", "dataType"="string", "required"=true, "description"="Short name"},
      *          {"name"="owner", "dataType"="string", "required"=true, "description"="Owner"},
      *          {"name"="blazon", "dataType"="string", "required"=true, "description"="Blazon"},
-     *          {"name"="jerseys", "dataType"="objects", "required"=true, "description"="Multiple Jersey"},
-     *          {"name"="clubStats", "dataType="objects", "required"=true, "description"="The club stats"},
+     *          {"name"="jerseys", "dataType"="array()", "required"=true, "description"="Multiple Jersey"},
+     *          {"name"="clubStats", "dataType"="array()", "required"=true, "description"="The club Stats"},
      *          {"name"="stadium", "dataType"="object", "required"=true, "description"="Stadium"},
      *     }
      * )

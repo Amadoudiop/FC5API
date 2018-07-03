@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Club
  *
@@ -29,7 +28,8 @@ class Club extends AbstractEntity
         'blazon',
         'jerseys',
         'clubStats',
-        'stadium'
+        'stadium',
+        'user.id'
     ];
 
     /**
@@ -71,7 +71,7 @@ class Club extends AbstractEntity
 
     /**
      * One Club have Many Jersey.
-     * @ORM\OneToMany(targetEntity="Jersey", mappedBy="club")
+     * @ORM\OneToMany(targetEntity="Jersey", mappedBy="club", cascade={"persist"})
      */
     private $jerseys;
 
@@ -83,10 +83,17 @@ class Club extends AbstractEntity
 
     /**
      * One Club has One Stadium.
-     * @ORM\OneToOne(targetEntity="Stadium", mappedBy="club")
+     * @ORM\OneToOne(targetEntity="Stadium", cascade={"persist"})
+     * @ORM\JoinColumn(name="stadium_id", referencedColumnName="id")
      */
     private $stadium;
 
+    /**
+     * One Club has One User.
+     * @ORM\OneToOne(targetEntity="\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     public function __construct()
     {
@@ -292,5 +299,31 @@ class Club extends AbstractEntity
     public function getStadium()
     {
         return $this->stadium;
+    }
+
+
+
+    /**
+     * Set user.
+     *
+     * @param \UserBundle\Entity\User|null $user
+     *
+     * @return Club
+     */
+    public function setUser(\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return \UserBundle\Entity\User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StoreItemType extends AbstractType
+class StoreItemType extends SimpleFormType
 {
     /**
      * {@inheritdoc}
@@ -26,9 +26,13 @@ class StoreItemType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\StoreItem'
-        ));
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults(
+            [
+                'data_class' => 'AppBundle\Entity\StoreItem'
+            ]
+        );
     }
 
     /**
