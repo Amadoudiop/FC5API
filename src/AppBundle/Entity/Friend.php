@@ -13,18 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Friend extends AbstractEntity
 {
-    public static $defaultFieldOrder = "label";
-    public static $defaultDirOrder = "asc";
-    public static $fieldsOrder = [
-        'id',
-        'label',
-    ];
-    public static $fieldsApi = [
-        'id',
-        'label',
-        'blason',
-    ];
-
     /**
      * @var int
      *
@@ -35,25 +23,23 @@ class Friend extends AbstractEntity
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="label", type="string", length=125)
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $label;
+    private $from;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $to;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="short_label", type="string", length=5)
+     * @ORM\Column(name="approved", type="boolean")
      */
-    private $shortLabel;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="flag", type="string", length=255)
-     */
-    private $flag;
+    private $approved;
 
 
     /**
@@ -67,74 +53,74 @@ class Friend extends AbstractEntity
     }
 
     /**
-     * Set label
+     * Set approved.
      *
-     * @param string $label
+     * @param bool $approved
      *
      * @return Friend
      */
-    public function setLabel($label)
+    public function setApproved($approved)
     {
-        $this->label = $label;
+        $this->approved = $approved;
 
         return $this;
     }
 
     /**
-     * Get label
+     * Get approved.
      *
-     * @return string
+     * @return bool
      */
-    public function getLabel()
+    public function getApproved()
     {
-        return $this->label;
+        return $this->approved;
     }
 
     /**
-     * Set shortLabel
+     * Set from.
      *
-     * @param string $shortLabel
+     * @param \UserBundle\Entity\User $from
      *
      * @return Friend
      */
-    public function setShortLabel($shortLabel)
+    public function setFrom(\UserBundle\Entity\User $from)
     {
-        $this->shortLabel = $shortLabel;
+        $this->from = $from;
 
         return $this;
     }
 
     /**
-     * Get shortLabel
+     * Get from.
      *
-     * @return string
+     * @return \UserBundle\Entity\User
      */
-    public function getShortLabel()
+    public function getFrom()
     {
-        return $this->shortLabel;
+        return $this->from;
     }
 
     /**
-     * Set flag
+     * Set to.
      *
-     * @param string $flag
+     * @param \UserBundle\Entity\User $to
      *
      * @return Friend
      */
-    public function setFlag($flag)
+    public function setTo(\UserBundle\Entity\User $to)
     {
-        $this->flag = $flag;
+        $this->to = $to;
 
         return $this;
     }
 
     /**
-     * Get flag
+     * Get to.
      *
-     * @return string
+     * @return \UserBundle\Entity\User
      */
-    public function getFlag()
+    public function getTo()
     {
-        return $this->flag;
+        return $this->to;
     }
 }

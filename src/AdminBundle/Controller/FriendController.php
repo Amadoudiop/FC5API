@@ -15,7 +15,7 @@ use Exception;
 /**
  * Friend controller.
  *
- * @Route("api/friend")
+ * @Route("friend")
  */
 class FriendController extends JsonController
 {
