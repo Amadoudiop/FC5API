@@ -3,15 +3,29 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AdminBundle\Entity\AbstractEntity;
 
 /**
  * Stadium
  *
  * @ORM\Table(name="stadium")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\StadiumRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DefaultRepository")
  */
-class Stadium
+class Stadium extends AbstractEntity
 {
+    public static $defaultFieldOrder = "name";
+    public static $defaultDirOrder = "asc";
+    public static $fieldsOrder = [
+        'id',
+        'name',
+    ];
+    public static $fieldsApi = [
+        'id',
+        'name',
+        'currentCapacity',
+        'maximumCapacity',
+        'costPerGame',
+    ];
     /**
      * @var int
      *
@@ -33,15 +47,21 @@ class Stadium
      *
      * @ORM\Column(name="current_capacity", type="integer", length=6)
      */
-    private $current_capacity;
+    private $currentCapacity;
 
     /**
      * @var int
      *
      * @ORM\Column(name="maximum_capacity", type="integer", length=6)
      */
-    private $maximum_capacity;
+    private $maximumCapacity;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cost_per_game", type="integer", length=6)
+     */
+    private $costPerGame;
 
     /**
      * Get id
@@ -86,7 +106,7 @@ class Stadium
      */
     public function setCurrentCapacity($currentCapacity)
     {
-        $this->current_capacity = $currentCapacity;
+        $this->currentCapacity = $currentCapacity;
 
         return $this;
     }
@@ -98,7 +118,7 @@ class Stadium
      */
     public function getCurrentCapacity()
     {
-        return $this->current_capacity;
+        return $this->currentCapacity;
     }
 
     /**
@@ -110,7 +130,7 @@ class Stadium
      */
     public function setMaximumCapacity($maximumCapacity)
     {
-        $this->maximum_capacity = $maximumCapacity;
+        $this->maximumCapacity = $maximumCapacity;
 
         return $this;
     }
@@ -122,6 +142,54 @@ class Stadium
      */
     public function getMaximumCapacity()
     {
-        return $this->maximum_capacity;
+        return $this->maximumCapacity;
+    }
+
+    /**
+     * Set costPerGame.
+     *
+     * @param int $costPerGame
+     *
+     * @return Stadium
+     */
+    public function setCostPerGame($costPerGame)
+    {
+        $this->costPerGame = $costPerGame;
+
+        return $this;
+    }
+
+    /**
+     * Get costPerGame.
+     *
+     * @return int
+     */
+    public function getCostPerGame()
+    {
+        return $this->costPerGame;
+    }
+
+    /**
+     * Set club.
+     *
+     * @param \AppBundle\Entity\Stadium|null $club
+     *
+     * @return Stadium
+     */
+    public function setClub(\AppBundle\Entity\Stadium $club = null)
+    {
+        $this->club = $club;
+
+        return $this;
+    }
+
+    /**
+     * Get club.
+     *
+     * @return \AppBundle\Entity\Stadium|null
+     */
+    public function getClub()
+    {
+        return $this->club;
     }
 }
