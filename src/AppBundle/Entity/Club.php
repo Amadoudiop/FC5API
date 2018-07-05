@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use AdminBundle\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Club
  *
@@ -19,12 +18,18 @@ class Club extends AbstractEntity
     public static $fieldsOrder = [
         'id',
         'name',
+        'shortName'
     ];
     public static $fieldsApi = [
         'id',
         'name',
-        'blason',
+        'shortName',
+        'owner',
+        'blazon',
+        'jerseys',
         'clubStats',
+        'stadium',
+        'user.id'
     ];
 
     /**
@@ -39,16 +44,36 @@ class Club extends AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=125)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="blason", type="string", length=255)
+     * @ORM\Column(name="short_name", type="string", length=125)
      */
-    private $blason;
+    private $shortName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="owner", type="string", length=125)
+     */
+    private $owner;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="blazon", type="string", length=255)
+     */
+    private $blazon;
+
+    /**
+     * One Club have Many Jersey.
+     * @ORM\OneToMany(targetEntity="Jersey", mappedBy="club", cascade={"persist"})
+     */
+    private $jerseys;
 
     /**
      * One Club has Many ClubStat.
@@ -56,10 +81,24 @@ class Club extends AbstractEntity
      */
     private $clubStats;
 
+    /**
+     * One Club has One Stadium.
+     * @ORM\OneToOne(targetEntity="Stadium", cascade={"persist"})
+     * @ORM\JoinColumn(name="stadium_id", referencedColumnName="id")
+     */
+    private $stadium;
+
+    /**
+     * One Club has One User.
+     * @ORM\OneToOne(targetEntity="\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     public function __construct()
     {
         $this->clubStats = new ArrayCollection();
+        $this->jerseys = new ArrayCollection();
     }
 
     /**
@@ -97,27 +136,27 @@ class Club extends AbstractEntity
     }
 
     /**
-     * Set blason
+     * Set blazon
      *
-     * @param string $blason
+     * @param string $blazon
      *
      * @return Club
      */
-    public function setBlason($blason)
+    public function setBlazon($blazon)
     {
-        $this->blason = $blason;
+        $this->blazon = $blazon;
 
         return $this;
     }
 
     /**
-     * Get blason
+     * Get blazon
      *
      * @return string
      */
-    public function getBlason()
+    public function getBlazon()
     {
-        return $this->blason;
+        return $this->blazon;
     }
 
     /**
@@ -152,5 +191,139 @@ class Club extends AbstractEntity
     public function getClubStats()
     {
         return $this->clubStats;
+    }
+
+    /**
+     * Set shortName.
+     *
+     * @param string $shortName
+     *
+     * @return Club
+     */
+    public function setShortName($shortName)
+    {
+        $this->shortName = $shortName;
+
+        return $this;
+    }
+
+    /**
+     * Get shortName.
+     *
+     * @return string
+     */
+    public function getShortName()
+    {
+        return $this->shortName;
+    }
+
+    /**
+     * Set owner.
+     *
+     * @param string $owner
+     *
+     * @return Club
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner.
+     *
+     * @return string
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Add jersey.
+     *
+     * @param \AppBundle\Entity\Jersey $jersey
+     *
+     * @return Club
+     */
+    public function addJersey(\AppBundle\Entity\Jersey $jersey)
+    {
+        $this->jerseys[] = $jersey;
+
+        return $this;
+    }
+
+    /**
+     * Remove jersey.
+     *
+     * @param \AppBundle\Entity\Jersey $jersey
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeJersey(\AppBundle\Entity\Jersey $jersey)
+    {
+        return $this->jerseys->removeElement($jersey);
+    }
+
+    /**
+     * Get jerseys.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getJerseys()
+    {
+        return $this->jerseys;
+    }
+
+    /**
+     * Set stadium.
+     *
+     * @param \AppBundle\Entity\Stadium|null $stadium
+     *
+     * @return Club
+     */
+    public function setStadium(\AppBundle\Entity\Stadium $stadium = null)
+    {
+        $this->stadium = $stadium;
+
+        return $this;
+    }
+
+    /**
+     * Get stadium.
+     *
+     * @return \AppBundle\Entity\Stadium|null
+     */
+    public function getStadium()
+    {
+        return $this->stadium;
+    }
+
+
+
+    /**
+     * Set user.
+     *
+     * @param \UserBundle\Entity\User|null $user
+     *
+     * @return Club
+     */
+    public function setUser(\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return \UserBundle\Entity\User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

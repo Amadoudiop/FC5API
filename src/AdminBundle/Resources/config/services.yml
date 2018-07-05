@@ -1,9 +1,4 @@
 services:
-#    admin.example:
-#        class: AdminBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
-
-
     fc5.json_controller:
         class: AdminBundle\Controller\JsonController
         calls:
@@ -30,16 +25,24 @@ services:
             - '@service_container'
             - '@doctrine'
 
-    fc5.loadDataFixture:
-        class: AdminBundle\DataFixtures\ClubFixtures
-        tags: [doctrine.fixture.orm]
-
-    fc5.loadPlayerFixture:
-        class: AdminBundle\DataFixtures\PlayerFixtures
-        tags: [doctrine.fixture.orm]
-        arguments:
-            - '%kernel.root_dir%'
-            - '@fc5.ultimateTeamApi'
-
     fc5.SimpleStats:
         class: AdminBundle\Service\SimpleStats
+#
+#    fc5.loadDataFixture:
+#        class: AdminBundle\DataFixtures\ClubFixtures
+#        tags: [doctrine.fixture.orm]
+#
+#    fc5.loadPlayerFixture:
+#        class: AdminBundle\DataFixtures\PlayerFixtures
+#        tags: [doctrine.fixture.orm]
+#        arguments:
+#            - '%kernel.root_dir%'
+#            - '@fc5.ultimateTeamApi'
+#
+#    fc5.loadBlazonFixture:
+#        class: AdminBundle\DataFixtures\BlazonFixtures
+#        tags: [doctrine.fixture.orm]
+
+    fc5.storeFixture:
+        class: AdminBundle\DataFixtures\StoreFixtures
+        tags: [doctrine.fixture.orm]

@@ -40,7 +40,7 @@ class JerseyController extends Controller
     public function newAction(Request $request)
     {
         $jersey = new Jersey();
-        $form = $this->createForm('AppBundle\Form\JerseyType', $jersey);
+        $form = $this->createForm('AppBundle\Form\Jersey', $jersey);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -82,7 +82,7 @@ class JerseyController extends Controller
     public function editAction(Request $request, Jersey $jersey)
     {
         $deleteForm = $this->createDeleteForm($jersey);
-        $editForm = $this->createForm('AppBundle\Form\JerseyType', $jersey);
+        $editForm = $this->createForm('AppBundle\Form\Jersey', $jersey);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
