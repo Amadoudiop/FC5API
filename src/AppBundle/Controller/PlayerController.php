@@ -3,13 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Player;
-use Symfony\Component\HttpFoundation\Request;
 use AdminBundle\Helper\Response\ApiResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Controller\JsonController;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Player controller.

@@ -13,16 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Jersey extends AbstractEntity
 {
-    public static $defaultFieldOrder = "id";
+    public static $defaultFieldOrder = "jerseyType";
     public static $defaultDirOrder = "asc";
     public static $fieldsOrder = [
         'id',
-        'jerseyType.label',
+        'jerseyType',
     ];
     public static $fieldsApi = [
         'id',
         'img',
-        'jerseyType.label',
+        'jerseyType',
     ];
 
     /**
@@ -43,15 +43,21 @@ class Jersey extends AbstractEntity
 
     /**
      * Many Jersey have One Club.
-     * @ORM\ManyToOne(targetEntity="Club", inversedBy="jerseys")
+     * @ORM\ManyToOne(targetEntity="Club", inversedBy="jerseys" ,cascade={"persist"})
      * @ORM\JoinColumn(name="club_id", referencedColumnName="id")
      */
     private $club;
 
+//    /**
+//     * Many Jersey have One JerseyType.
+//     * @ORM\ManyToOne(targetEntity="JerseyType", inversedBy="jerseys")
+//     * @ORM\JoinColumn(name="jersey_type_id", referencedColumnName="id")
+//     */
+//    private $jerseyType;
     /**
-     * Many Jersey have One JerseyType.
-     * @ORM\ManyToOne(targetEntity="JerseyType", inversedBy="jerseys")
-     * @ORM\JoinColumn(name="jersey_type_id", referencedColumnName="id")
+     * @var string
+     *
+     * @ORM\Column(name="jersey_type", type="string", length=50)
      */
     private $jerseyType;
 
@@ -90,30 +96,8 @@ class Jersey extends AbstractEntity
     }
 
     /**
-     * Set jerseyType
      *
-     * @param \AppBundle\Entity\JerseyType $jerseyType
-     *
-     * @return Jersey
-     */
-    public function setJerseyType(\AppBundle\Entity\JerseyType $jerseyType = null)
-    {
-        $this->jerseyType = $jerseyType;
-
-        return $this;
-    }
-
-    /**
-     * Get jerseyType
-     *
-     * @return \AppBundle\Entity\JerseyType
-     */
-    public function getJerseyType()
-    {
-        return $this->jerseyType;
-    }
-
-    /**
+     * /**
      * Set club.
      *
      * @param \AppBundle\Entity\Club|null $club
@@ -135,5 +119,29 @@ class Jersey extends AbstractEntity
     public function getClub()
     {
         return $this->club;
+    }
+
+    /**
+     * Set jerseyType.
+     *
+     * @param string $jerseyType
+     *
+     * @return Jersey
+     */
+    public function setJerseyType($jerseyType)
+    {
+        $this->jerseyType = $jerseyType;
+
+        return $this;
+    }
+
+    /**
+     * Get jerseyType.
+     *
+     * @return string
+     */
+    public function getJerseyType()
+    {
+        return $this->jerseyType;
     }
 }
