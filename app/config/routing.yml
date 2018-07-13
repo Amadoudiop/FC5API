@@ -6,10 +6,6 @@ user:
         _format: json
     methods:  [GET, POST, OPTIONS]
 
-app_user:
-    resource: "@UserBundle/Controller/DefaultController.php"
-    type:     annotation
-
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
