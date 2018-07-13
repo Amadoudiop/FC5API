@@ -60,7 +60,7 @@ class LoginController extends Controller
 
         $token = $this->getToken($user);
 
-        return new ApiResponse($this->serialize(['token' => $token]));
+        return new ApiResponse(['token' => $token]);
     }
 
     /**
