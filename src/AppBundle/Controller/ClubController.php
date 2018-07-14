@@ -148,6 +148,7 @@ class ClubController extends JsonController
         $form->submit($json);
 
         if (!$form->isValid()) {
+
             return new ApiResponse(null, 422, $this->getErrorMessages($form));
         } else {
             $club = $form->getData();
