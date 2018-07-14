@@ -72,8 +72,28 @@ class RegistrationController extends BaseController
             $dispatcher->dispatch(
                           FOSUserEvents::REGISTRATION_SUCCESS, $event
                        );
- 
+
+            // on génère le token de vérification de compte
+            $tokenGenerator = $this->get('fos_user.util.token_generator');
+            $token = $tokenGenerator->generateToken();
+
+            $user->setConfirmationToken($token);
+
             $userManager->updateUser($user);
+
+            //envoie d'un mail pour activation de compte
+            $message = (new \Swift_Message('Activation de votre compte'))
+                ->setFrom($this->getParameter('mailer_user'))
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'email/confirm_account.html.twig',
+                        ['token' => $token]
+                    ),
+                    'text/html'
+                );
+
+            $this->get('mailer')->send($message);
 
             return new ApiResponse(null, 201);
         } else {
