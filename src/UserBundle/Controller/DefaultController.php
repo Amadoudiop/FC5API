@@ -15,7 +15,6 @@ use FOS\UserBundle\Model\UserManagerInterface;
 /**
  * User controller.
  *
- *
  */
 
 class DefaultController extends JsonController
@@ -38,24 +37,25 @@ class DefaultController extends JsonController
      *     parameters={
      *     },
      *    statusCodes={
-     *         201="Returned when listed",
-     *         404="Returned when a user is not found",
-     *         400="Returned when a violation is raised by validation"
+     *         200="Returned when listed"
      *     }
      * )
      */
     public function searchAction(Request $request, $username)
     {
-
+        $userConnected = $this->getUser();
         $usersRepo = $this->getDoctrine()->getRepository('UserBundle:User');
         $users = $usersRepo->createQueryBuilder('a')
             ->where('a.usernameCanonical LIKE :search')
-            ->setParameter('search', '%'.$username.'%')
+            ->setParameter('search', '%' . $username . '%')
             ->getQuery()
             ->getResult();
 
         $data = [];
-        foreach ($users as $user){
+        foreach ($users as $user) {
+
+            if ($user->getId() == $userConnected->getId()) continue;
+
             $username = (empty($user->getUsername())) ? '' : $user->getUsername();
             $id = (empty($user->getId())) ? '' : $user->getId();
 
@@ -63,6 +63,7 @@ class DefaultController extends JsonController
                 'username' => $username,
                 'id' => $id
             ];
+
         }
         return new ApiResponse($data);
     }
@@ -78,12 +79,12 @@ class DefaultController extends JsonController
      *
      * @ApiDoc (
      *
-     *  description="Enabled account",
+     *  description="Activated account",
      *     section="User",
      *     parameters={
      *     },
      *    statusCodes={
-     *         201="Returned when listed",
+     *         201="Returned when activated",
      *         404="Returned when a user is not found",
      *         400="Returned when a violation is raised by validation"
      *     }

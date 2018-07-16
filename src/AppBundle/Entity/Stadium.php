@@ -104,7 +104,7 @@ class Stadium extends AbstractEntity
      *
      * @return Stadium
      */
-    public function setCurrentCapacity($currentCapacity)
+    public function setCurrentCapacity($currentCapacity = 15000)
     {
         $this->currentCapacity = $currentCapacity;
 
@@ -128,7 +128,7 @@ class Stadium extends AbstractEntity
      *
      * @return Stadium
      */
-    public function setMaximumCapacity($maximumCapacity)
+    public function setMaximumCapacity($maximumCapacity = 60000)
     {
         $this->maximumCapacity = $maximumCapacity;
 
@@ -152,7 +152,7 @@ class Stadium extends AbstractEntity
      *
      * @return Stadium
      */
-    public function setCostPerGame($costPerGame)
+    public function setCostPerGame($costPerGame = 60)
     {
         $this->costPerGame = $costPerGame;
 
