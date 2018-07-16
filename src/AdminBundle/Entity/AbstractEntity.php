@@ -29,7 +29,7 @@ abstract class AbstractEntity
         foreach ($fieldsApi as $attribute) {
             $getter = 'get' . ucfirst($attribute);
             $value  = $this->$getter();
-            if ($value instanceof AbstractEntity && !$stopRecursive) {
+            if (($value instanceof AbstractEntity || $value instanceof \FOS\UserBundle\Model\User) && !$stopRecursive) {
                 $value = $value->serializeEntity([], true && !$recursive, $recursive);
             } else {
                 if (($value instanceof PersistentCollection || $value instanceof ArrayCollection) && !$stopRecursive) {
