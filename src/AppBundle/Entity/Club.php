@@ -29,7 +29,7 @@ class Club extends AbstractEntity
         'jerseys',
         'clubStats',
         'stadium',
-        'user.id'
+        'user'
     ];
 
     /**
