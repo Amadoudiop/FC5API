@@ -34,7 +34,7 @@ class FriendController extends Controller
      *  description="Add a new friend",
      *     section="Friend",
      *     parameters={
-     *          {"name"="friend_id", "dataType"="string", "required"=true, "description"="User id"},
+     *          {"name"="friend_id", "dataType"="integer", "required"=true, "description"="User id"},
      *     },
      *    statusCodes={
      *         201="Returned when added",
@@ -71,7 +71,7 @@ class FriendController extends Controller
         $friends = new Friend();
         $friends->setFrom($user);
         $friends->setTo($friend);
-        $friends->setApproved(true);
+        $friends->setApproved(false);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($friends);
@@ -126,7 +126,118 @@ class FriendController extends Controller
             ];
         }
 
+        $friends = $this->getDoctrine()
+            ->getRepository('AppBundle:Friend')
+            ->findBy(['to' => $user, 'approved' => true]);
+
+
+        foreach ($friends as $friend) {
+            $username = (empty($friend->getFrom()->getUsername())) ? '' : $friend->getFrom()->getUsername();
+            $id = (empty($friend->getFrom()->getId())) ? '' : $friend->getFrom()->getId();
+
+            $data[] = [
+                'username' => $username,
+                'id' => $id
+            ];
+        }
+
         return new ApiResponse($data);
+    }
+
+    /**
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("/listWaiting", name="friend_list_waiting")
+     * @Method("GET")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Friends list waiting",
+     *     section="Friend",
+     *     parameters={
+     *     },
+     *    statusCodes={
+     *         201="Returned when listed",
+     *         404="Returned when a user is not found",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
+     */
+    public function listWaitingAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new ApiResponse(null, 404, ['User not found']);
+        }
+
+        $friends = $this->getDoctrine()
+            ->getRepository('AppBundle:Friend')
+            ->findBy(['to' => $user, 'approved' => false]);
+
+        $data = [];
+
+        foreach ($friends as $friend) {
+            $username = (empty($friend->getFrom()->getUsername())) ? '' : $friend->getFrom()->getUsername();
+            $request_id = (empty($friend->getId())) ? '' : $friend->getId();
+
+            $data[] = [
+                'username' => $username,
+                'request_id' => $request_id,
+
+            ];
+        }
+
+        return new ApiResponse($data);
+    }
+
+    /**
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("/accept", name="friend_accept")
+     * @Method("POST")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Accept a new friend",
+     *     section="Friend",
+     *     parameters={
+     *          {"name"="request_id", "dataType"="integer", "required"=true, "description"="Request id"},
+     *     },
+     *    statusCodes={
+     *         201="Returned when accepted",
+     *         404="Returned when a user is not found",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
+     */
+    public function acceptAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $request_id = $request->request->get('request_id');
+
+        $friend = $this->getDoctrine()
+            ->getRepository('AppBundle:Friend')
+            ->findOneBy(['id' => $request_id, 'to'=> $user]);
+
+        if (!$friend) {
+            return new ApiResponse(null, 404, ['Request not found']);
+        }
+
+        $friend->setApproved(true);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($friend);
+        $em->flush();
+
+        return new ApiResponse('Your request has been sent');
     }
 
     /**
