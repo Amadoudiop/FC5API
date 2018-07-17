@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Club;
+use AppBundle\Entity\JerseyType;
 use AppBundle\Entity\Stadium;
 use AppBundle\Form\ClubFormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,6 +99,39 @@ class ClubController extends JsonController
     }
 
     /**
+     * Get a club by owner
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     * @ApiDoc(
+     *     description="get club by owner",
+     *     section="Club"
+     * )
+     *
+     * @Route("", name="getClub")
+     * @Method("GET")
+     *
+     */
+    public function getUserClubAction(Request $request)
+    {
+        $userCo = $this->getUser();
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Club');
+        $club = $repository->createQueryBuilder('a')
+            ->where('a.owner = :owner')
+            ->setParameter('owner', $userCo->getUsername())
+            ->getQuery()
+            ->getResult();
+        if (empty($club[0])) {
+            return new ApiResponse(null, 404, ['Club not found']);
+        } else {
+            return new ApiResponse(
+                $club[0]->serializeEntity()
+            );
+        }
+    }
+
+    /**
      * Create an Club
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -130,7 +164,9 @@ class ClubController extends JsonController
      */
     public function createAction(Request $request)
     {
+        $userCo = $this->getUser();
         $json = $this->getJson($request)->toArray();
+
         $em = $this->getDoctrine()->getManager();
 
         $club = new Club();
@@ -144,7 +180,9 @@ class ClubController extends JsonController
 //        $stadium->setName($json['stadium']['name']);
 //        $json['stadium'] = $stadium;
 
-//        dump($json);die;
+        $json['owner'] = $userCo->getUsername();
+        $json['user'] = $userCo->getId();
+
         $form->submit($json);
 
         if (!$form->isValid()) {
@@ -155,6 +193,11 @@ class ClubController extends JsonController
 
             $em->persist($club);
             $em->flush();
+
+            foreach ($club->getJerseys() as $jersey){
+                $jersey->setClub($club);
+                $em->flush();
+            }
 
             return new ApiResponse(
                 $club->serializeEntity()
