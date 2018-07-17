@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AdminBundle\Controller\JsonController;
+use FOS\UserBundle\Model\UserManagerInterface;
 
 /**
  * User controller.
  *
- * @Security("is_granted('ROLE_USER')")
  */
 
 class DefaultController extends JsonController
@@ -25,6 +25,8 @@ class DefaultController extends JsonController
      *
      * @Route("/search/{username}", name="users_search")
      * @Method("GET")
+     *
+     * @Security("is_granted('ROLE_USER')")
      *
      * @return \AdminBundle\Helper\Response\ApiResponse
      *
@@ -66,4 +68,42 @@ class DefaultController extends JsonController
         return new ApiResponse($data);
     }
 
+    /**
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route("/activateAccount/{token}", name="activate_account")
+     * @Method("GET")
+     *
+     * @return \AdminBundle\Helper\Response\ApiResponse
+     *
+     * @ApiDoc (
+     *
+     *  description="Activated account",
+     *     section="User",
+     *     parameters={
+     *     },
+     *    statusCodes={
+     *         201="Returned when activated",
+     *         404="Returned when a user is not found",
+     *         400="Returned when a violation is raised by validation"
+     *     }
+     * )
+     */
+    public function activateAccount($token)
+    {
+        /** @var $userManager UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        $user = $userManager->findUserByConfirmationToken($token);
+
+        if (null === $user) {
+            return new ApiResponse(null, 400, ['Token not found']);
+        }else{
+            $user->setEnabled(true);
+            $user->setConfirmationToken(null);
+            $userManager->updateUser($user);
+            return new ApiResponse('Your account has been activated');
+        }
+    }
 }
